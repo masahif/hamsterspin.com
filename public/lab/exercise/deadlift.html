@@ -1,0 +1,2575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta
+    name="description"
+    content="An interactive HamsterSpin Motion Lab deadlift model comparing a hip-dominant strategy with spinal and knee coordination patterns in the sagittal plane."
+  >
+  <link rel="icon" href="../../image/ham.svg" type="image/svg+xml">
+  <title>Deadlift Movement Model | HamsterSpin Motion Lab</title>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="HamsterSpin Motion Lab">
+  <meta property="og:url" content="https://hamsterspin.com/lab/exercise/deadlift.html">
+  <meta property="og:title" content="Deadlift Movement Model | HamsterSpin Motion Lab">
+  <meta
+    property="og:description"
+    content="An interactive HamsterSpin Motion Lab deadlift model comparing a hip-dominant strategy with spinal and knee coordination patterns in the sagittal plane."
+  >
+  <meta property="og:image" content="https://hamsterspin.com/image/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #f4f2ec;
+      --surface: #fffdf8;
+      --foreground: #1d2524;
+      --muted: #e7e3da;
+      --muted-foreground: #626a67;
+      --border: #c9c5ba;
+      --primary: #1e6965;
+      --primary-foreground: #ffffff;
+      --accent: #e7f1ef;
+      --accent-foreground: #174d4a;
+      --series-good: #16766f;
+      --series-compare: #c45133;
+      --series-neutral: #777d7a;
+      --focus: #1167a8;
+      --ground: #4b514f;
+      --bar: #505655;
+      --shadow: 0 18px 45px rgb(31 41 39 / 10%);
+      font-family:
+        Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --background: #141918;
+        --surface: #1c2321;
+        --foreground: #edf2ef;
+        --muted: #2a3330;
+        --muted-foreground: #b4bfbb;
+        --border: #46514e;
+        --primary: #9fd5cf;
+        --primary-foreground: #10211f;
+        --accent: #243a37;
+        --accent-foreground: #d9f0ed;
+        --series-good: #79c8c0;
+        --series-compare: #ff9a79;
+        --series-neutral: #a7b0ad;
+        --focus: #8bcaff;
+        --ground: #c5cecb;
+        --bar: #d5dcda;
+        --shadow: 0 18px 50px rgb(0 0 0 / 28%);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--series-good) 10%, transparent), transparent 28rem),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: absolute;
+      inset-block-start: 0.75rem;
+      inset-inline-start: 0.75rem;
+      z-index: 10;
+      padding: 0.65rem 0.9rem;
+      border-radius: 0.5rem;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      transform: translateY(-180%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .page {
+      width: min(74rem, calc(100% - 2rem));
+      margin-inline: auto;
+      padding-block: clamp(1.5rem, 4vw, 3.5rem);
+    }
+
+    header {
+      max-width: 70rem;
+      margin-block-end: 1.5rem;
+    }
+
+    .brandbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem 1rem;
+      margin-block-end: 1.35rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.48rem;
+      color: var(--foreground);
+      text-decoration: none;
+    }
+
+    .brand-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-product {
+      color: var(--muted-foreground);
+      font-size: 0.82rem;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .language-switch {
+      display: inline-flex;
+      padding: 0.2rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--muted);
+    }
+
+    .language-switch button {
+      min-height: 2.15rem;
+      padding-inline: 0.8rem;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--foreground);
+      cursor: pointer;
+    }
+
+    .language-switch button[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--foreground);
+      box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+      font-weight: 750;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.35rem;
+      color: var(--series-good);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.75rem, 4vw, 3.2rem);
+      line-height: 1.12;
+      letter-spacing: -0.035em;
+    }
+
+    .lead {
+      max-width: 70ch;
+      margin: 0.8rem 0 0;
+      color: var(--muted-foreground);
+    }
+
+    .lab {
+      padding: clamp(1rem, 2.8vw, 1.6rem);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      background: color-mix(in srgb, var(--surface) 96%, transparent);
+      box-shadow: var(--shadow);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns:
+        auto minmax(11rem, 1fr) minmax(11rem, 1fr) minmax(11rem, 0.7fr) auto;
+      gap: 1rem 1.25rem;
+      align-items: end;
+      margin-block-end: 1rem;
+    }
+
+    .profile-controls {
+      display: grid;
+      grid-template-columns: minmax(15rem, 1.35fr) minmax(12rem, 0.8fr) minmax(12rem, 1fr);
+      gap: 1rem 1.25rem;
+      align-items: end;
+      margin-block: 0 1rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.8rem;
+      background: color-mix(in srgb, var(--accent) 62%, transparent);
+    }
+
+    .profile-intro h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .profile-intro p,
+    .profile-summary {
+      margin: 0.25rem 0 0;
+      color: var(--muted-foreground);
+      font-size: 0.82rem;
+    }
+
+    .profile-summary {
+      grid-column: 1 / -1;
+      margin-block-start: -0.15rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      margin: -1px !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      clip-path: inset(50%) !important;
+      border: 0 !important;
+      white-space: nowrap !important;
+    }
+
+    .control {
+      display: grid;
+      gap: 0.38rem;
+      min-width: 0;
+    }
+
+    .control-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.4rem 0.8rem;
+      font-size: 0.88rem;
+      font-weight: 650;
+    }
+
+    output {
+      color: var(--muted-foreground);
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .pattern-select {
+      min-height: 2.75rem;
+      width: 100%;
+      padding-inline: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 0.6rem;
+      background: var(--surface);
+      color: var(--foreground);
+    }
+
+    .play-button {
+      min-height: 2.75rem;
+      padding: 0.55rem 1rem;
+      border: 0;
+      border-radius: 0.7rem;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .toggle {
+      display: inline-flex;
+      min-height: 2.75rem;
+      align-items: center;
+      gap: 0.55rem;
+      white-space: nowrap;
+    }
+
+    .toggle input {
+      inline-size: 1.15rem;
+      block-size: 1.15rem;
+      accent-color: var(--primary);
+    }
+
+    .checks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0 0 0.8rem;
+      padding: 0;
+      list-style: disc;
+    }
+
+    .checks li::marker {
+      content: "";
+    }
+
+    .checks li {
+      padding: 0.28rem 0.62rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted-foreground);
+      font-size: 0.78rem;
+    }
+
+    .checks-caption {
+      margin: 0 0 0.4rem;
+      color: var(--muted-foreground);
+      font-size: 0.78rem;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    .stage {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 20rem;
+      border-radius: 0.85rem;
+      background:
+        linear-gradient(to bottom, transparent 74%, color-mix(in srgb, var(--muted) 46%, transparent));
+    }
+
+    .stage text {
+      fill: var(--foreground);
+      font-family: inherit;
+    }
+
+    .stage .panel-label {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .stage .panel-detail {
+      fill: var(--muted-foreground);
+      font-size: 13px;
+    }
+
+    .stage .ground {
+      stroke: var(--ground);
+      stroke-width: 2;
+    }
+
+    .stage .barbell {
+      fill: color-mix(in srgb, var(--surface) 78%, var(--bar));
+      stroke: var(--bar);
+      stroke-width: 3;
+    }
+
+    .stage .bar-shaft {
+      stroke: var(--bar);
+      stroke-width: 5;
+      stroke-linecap: round;
+    }
+
+    .stage .barbell.compare-load {
+      stroke: var(--series-compare);
+    }
+
+    .stage .bar-shaft.compare-load {
+      stroke: var(--series-compare);
+    }
+
+    .stage .weight-label {
+      fill: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stage .force-line {
+      stroke: var(--bar);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
+
+    .stage .force-arrow {
+      fill: var(--bar);
+    }
+
+    .stage .force-label {
+      fill: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stage .svg-brand {
+      fill: var(--muted-foreground);
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: 0.04em;
+    }
+
+    .stage .limb,
+    .stage .pelvis {
+      fill: none;
+      stroke: var(--series-neutral);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .stage .pelvis {
+      stroke-width: 12;
+    }
+
+    .stage .spine-good,
+    .stage .spine-compare {
+      fill: none;
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .stage .spine-good {
+      stroke: var(--series-good);
+    }
+
+    .stage .spine-compare {
+      stroke: var(--series-compare);
+    }
+
+    .stage .spine-reference {
+      fill: none;
+      stroke: var(--series-good);
+      stroke-width: 3;
+      stroke-dasharray: 7 7;
+      opacity: 0.6;
+    }
+
+    .stage .joint {
+      fill: var(--surface);
+      stroke: var(--series-neutral);
+      stroke-width: 3;
+    }
+
+    .stage .joint-spine-good {
+      stroke: var(--series-good);
+    }
+
+    .stage .joint-spine-compare {
+      stroke: var(--series-compare);
+    }
+
+    .stage .head {
+      fill: var(--surface);
+      stroke: var(--series-neutral);
+      stroke-width: 5;
+    }
+
+    .stage .nose {
+      fill: var(--surface);
+      stroke: var(--series-neutral);
+      stroke-width: 3;
+      stroke-linejoin: round;
+    }
+
+    .stage .panel-divider {
+      stroke: var(--border);
+      stroke-width: 1;
+    }
+
+    .stage .angle-mark {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .stage .angle-good {
+      stroke: var(--series-good);
+    }
+
+    .stage .angle-compare {
+      stroke: var(--series-compare);
+    }
+
+    figcaption {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.35rem 1rem;
+      margin-block-start: 0.7rem;
+      color: var(--muted-foreground);
+      font-size: 0.86rem;
+    }
+
+    .legend {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .swatch {
+      inline-size: 1.7rem;
+      block-size: 0.25rem;
+      border-radius: 999px;
+      background: var(--series-good);
+    }
+
+    .swatch.compare {
+      background: var(--series-compare);
+    }
+
+    .data {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(15rem, 0.7fr);
+      gap: clamp(1rem, 3vw, 2rem);
+      align-items: start;
+      margin-block-start: 1.5rem;
+    }
+
+    h2 {
+      margin: 0 0 0.7rem;
+      font-size: 1.05rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    caption {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    th,
+    td {
+      padding: 0.52rem 0.45rem;
+      border-block-end: 1px solid var(--border);
+      text-align: end;
+    }
+
+    th:first-child,
+    td:first-child {
+      text-align: start;
+    }
+
+    thead th {
+      color: var(--muted-foreground);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .model-note {
+      margin: 0;
+      padding-inline-start: 1.1rem;
+      color: var(--muted-foreground);
+      font-size: 0.88rem;
+    }
+
+    .model-note li + li {
+      margin-block-start: 0.45rem;
+    }
+
+    .references {
+      margin: 0.9rem 0 0;
+      color: var(--muted-foreground);
+      font-size: 0.82rem;
+    }
+
+    .references a {
+      color: var(--foreground);
+      text-underline-offset: 0.18em;
+    }
+
+    .status {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .site-footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem 1rem;
+      margin-block-start: 1rem;
+      color: var(--muted-foreground);
+      font-size: 0.78rem;
+    }
+
+    .site-footer strong {
+      color: var(--foreground);
+    }
+
+    .site-footer a {
+      color: var(--foreground);
+      text-underline-offset: 0.18em;
+    }
+
+    .site-footer .footer-license {
+      flex-basis: 100%;
+      border-block-start: 1px solid var(--border);
+      padding-block-start: 0.5rem;
+    }
+
+    @media (max-width: 54rem) {
+      .controls {
+        grid-template-columns: auto 1fr;
+      }
+
+      .profile-controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .profile-intro {
+        grid-column: 1 / -1;
+      }
+
+      .control {
+        grid-column: 1 / -1;
+      }
+
+      .toggle {
+        justify-self: start;
+      }
+
+      .data {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 36rem) {
+      .page {
+        width: min(100% - 1rem, 74rem);
+        padding-block: 1rem;
+      }
+
+      .lab {
+        padding: 0.75rem;
+        border-radius: 0.9rem;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .play-button,
+      .toggle {
+        width: 100%;
+      }
+
+      .toggle {
+        justify-content: center;
+      }
+
+      .profile-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-intro,
+      .profile-summary {
+        grid-column: auto;
+      }
+
+      .stage {
+        min-height: 15rem;
+      }
+
+      th,
+      td {
+        padding-inline: 0.25rem;
+        font-size: 0.78rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skip-link {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#lab-main" data-i18n="skipLink">操作画面へ移動</a>
+  <div class="page">
+    <header>
+      <div class="brandbar">
+        <a class="brand" href="../index.html" aria-label="HamsterSpin Motion Lab">
+          <span class="brand-name">HamsterSpin</span>
+          <span class="brand-product">Motion Lab</span>
+        </a>
+        <div class="language-switch" role="group" aria-label="Language">
+          <button type="button" data-language="ja" aria-pressed="false">日本語</button>
+          <button type="button" data-language="en" aria-pressed="true">English</button>
+        </div>
+      </div>
+      <p class="eyebrow">Sagittal motion model</p>
+      <h1 data-i18n="pageTitle">デッドリフト：股関節主導と多分節協調</h1>
+      <p class="lead" data-i18n="lead">
+        足位置と重りの高さを共通の課題拘束として、股関節、膝、腰椎、胸椎、頸部が
+        どのように協調して姿勢を合わせるかを比較します。比較側は検証用の協調仮説です。
+      </p>
+    </header>
+
+    <main id="lab-main" class="lab" tabindex="-1">
+      <section class="controls" aria-labelledby="motion-controls-heading">
+        <h2 id="motion-controls-heading" class="visually-hidden" data-i18n="motionControls">動作コントロール</h2>
+        <button id="play-button" class="play-button" type="button" aria-pressed="false">
+          上昇を再生
+        </button>
+
+        <div class="control">
+          <span class="control-head">
+            <label for="progress" data-i18n="motionPosition">動作位相</label>
+            <output id="progress-output" for="progress">上昇 0%・下降終点</output>
+          </span>
+          <input id="progress" type="range" min="0" max="100" value="0" step="1">
+        </div>
+
+        <div class="control">
+          <span class="control-head">
+            <label for="strategy" data-i18n="responseStrength">モデル応答の強さ</label>
+            <output id="strategy-output" for="strategy">模式値 100%</output>
+          </span>
+          <input id="strategy" type="range" min="0" max="100" value="100" step="1">
+        </div>
+
+        <div class="control">
+          <label for="pattern" data-i18n="coordinationPattern">協調パターン</label>
+          <select id="pattern" class="pattern-select">
+            <option value="flexion" data-i18n="patternFlexion">屈曲優位＋重り前方</option>
+            <option value="extension" data-i18n="patternExtension">伸展優位＋膝前方</option>
+          </select>
+        </div>
+
+        <label class="toggle">
+          <input id="overlay" type="checkbox">
+          <span data-i18n="overlay">重ね合わせ</span>
+        </label>
+      </section>
+
+      <section class="profile-controls" aria-labelledby="profile-heading">
+        <div class="profile-intro">
+          <h2 id="profile-heading" data-i18n="bodyProfile">体節プロファイル</h2>
+          <p data-i18n="bodyProfileNote">
+            AIST日本人青年男性平均の比率を表示基準にした模式モデルです。診断用の正常範囲ではありません。
+          </p>
+        </div>
+        <div class="control">
+          <span class="control-head">
+            <label for="height" data-i18n="heightLabel">身長</label>
+            <output id="height-output" for="height">178 cm</output>
+          </span>
+          <input id="height" type="range" min="150" max="200" value="178" step="1">
+        </div>
+        <div class="control">
+          <span class="control-head">
+            <label for="body-ratio" data-i18n="bodyRatioLabel">体幹／大腿比</label>
+            <output id="body-ratio-output" for="body-ratio">1.28</output>
+          </span>
+          <input id="body-ratio" type="range" min="85" max="115" value="100" step="1">
+        </div>
+        <p id="profile-summary" class="profile-summary"></p>
+      </section>
+
+      <p id="constraints-caption" class="checks-caption" data-i18n="kinematicConstraints">運動学的な固定条件</p>
+      <ul class="checks" aria-labelledby="constraints-caption">
+        <li data-i18n="fixedFoot">足底固定</li>
+        <li data-i18n="multiSegment">多分節協調</li>
+        <li data-i18n="armsHanging">腕は伸展位で下垂</li>
+        <li data-i18n="fixedBoneLengths">骨長一定</li>
+        <li data-i18n="loadHeightConstraint">重り高さを課題拘束</li>
+        <li data-i18n="kneeTravelConstraint">膝位置はつま先まで</li>
+      </ul>
+
+      <figure>
+        <svg
+          id="motion-stage"
+          class="stage"
+          viewBox="0 0 960 520"
+          role="img"
+          aria-labelledby="stage-title stage-description"
+        >
+          <title id="stage-title">デッドリフトの股関節主導と多分節協調の比較</title>
+          <desc id="stage-description">
+            左は脊柱リンクの形を保って股関節を使う姿勢です。右は検証用の協調パターンです。
+            屈曲優位では膝位置を基準に保って重りの前方移動を許し、伸展優位では重り位置から
+            膝と股関節を逆運動学で合わせます。下向きの矢印は重力方向です。
+          </desc>
+          <g id="stage-labels"></g>
+          <g id="good-figure"></g>
+          <g id="compare-figure"></g>
+          <g id="stage-brand" aria-hidden="true"></g>
+        </svg>
+        <figcaption>
+          <span id="phase-label">上昇 · 下降終点</span>
+          <span class="legend">
+            <span class="legend-item"><span class="swatch"></span><span data-i18n="hipDominant">股関節主導</span></span>
+            <span class="legend-item"><span class="swatch compare"></span><span data-i18n="comparisonCoordination">比較する協調</span></span>
+          </span>
+        </figcaption>
+      </figure>
+
+      <section class="data" aria-labelledby="angle-heading">
+        <div>
+          <h2 id="angle-heading" data-i18n="currentMetrics">現在のモデル内指標</h2>
+          <table>
+            <caption data-i18n="metricsCaption">現在の動作位置における重り高さと前方変位、股関節、膝関節、脛骨傾斜、脊柱・頸部リンクの模式値</caption>
+            <thead>
+              <tr>
+                <th scope="col" data-i18n="metric">指標</th>
+                <th scope="col" data-i18n="hipDominant">股関節主導</th>
+                <th scope="col" data-i18n="coordinationPattern">協調パターン</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" data-i18n="loadHeight">重り高さ</th>
+                <td id="good-load">—</td>
+                <td id="compare-load">—</td>
+              </tr>
+              <tr>
+                <th scope="row" data-i18n="loadForwardDisplacement">重りの前方変位</th>
+                <td id="good-drift">—</td>
+                <td id="compare-drift">—</td>
+              </tr>
+              <tr>
+                <th scope="row" data-i18n="hipFlexion">股関節屈曲</th>
+                <td id="good-hip">—</td>
+                <td id="compare-hip">—</td>
+              </tr>
+              <tr>
+                <th scope="row" data-i18n="kneeFlexion">膝関節屈曲</th>
+                <td id="good-knee">—</td>
+                <td id="compare-knee">—</td>
+              </tr>
+              <tr>
+                <th scope="row" data-i18n="tibialInclination">脛骨の前後傾</th>
+                <td id="good-tibia">—</td>
+                <td id="compare-tibia">—</td>
+              </tr>
+              <tr>
+                <th scope="row" data-i18n="lowerLumbarAngle">下部腰椎リンク相対角</th>
+                <td id="good-lower">—</td>
+                <td id="compare-lower">—</td>
+              </tr>
+              <tr>
+                <th scope="row" data-i18n="upperLumbarAngle">上部腰椎リンク相対角</th>
+                <td id="good-upper">—</td>
+                <td id="compare-upper">—</td>
+              </tr>
+              <tr>
+                <th scope="row" data-i18n="thoracolumbarAngle">胸腰移行リンク相対角</th>
+                <td id="good-thoracic">—</td>
+                <td id="compare-thoracic">—</td>
+              </tr>
+              <tr>
+                <th scope="row" data-i18n="cervicalAngle">頸部リンク相対角</th>
+                <td id="good-cervical">—</td>
+                <td id="compare-cervical">—</td>
+              </tr>
+              <tr>
+                <th scope="row" data-i18n="spineMagnitude">模式上の脊柱・頸部偏位量</th>
+                <td id="good-total">—</td>
+                <td id="compare-total">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <h2 data-i18n="scopeHeading">用語とモデルの範囲</h2>
+          <ul class="model-note">
+            <li data-i18n="scope1">「多分節協調」は、隣接する体節の相対運動を組み合わせた姿勢変化を指します。</li>
+            <li data-i18n="scope2">矢状面の準静的な課題拘束付き逆運動学モデルです。</li>
+            <li data-i18n="scope3">足底と重りの高さを共通にし、屈曲優位では膝位置を基準に保ったまま重りの水平移動を許します。</li>
+            <li data-i18n="scope4">伸展優位では重りの水平位置も保ち、膝・股関節の位置を同時に解きます。</li>
+            <li data-i18n="scope5">屈曲優位・伸展優位は検証用の協調仮説で、一般的な人体反応や診断名ではありません。</li>
+            <li data-i18n="scope6">脊柱が屈曲しても重りを身体の近くに保つ動作はあり、重りの前方流出は屈曲の必然ではありません。</li>
+            <li data-i18n="scope7">下向き矢印は重力方向、鼻は顎の向きと頸部伸展を示します。</li>
+            <li data-i18n="scope8">「モデル応答の強さ」は模式値で、質量、関節トルク、筋力、慣性、床反力は計算していません。</li>
+            <li data-i18n="scope9">股関節主導は指導上の目標です。関節名と表示角度は模式的で、実測値・診断・傷害判定値ではありません。</li>
+          </ul>
+          <p class="references">
+            <span data-i18n="references">参考資料：</span>
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12954090/" data-i18n="reference1">デッドリフトの多分節協調研究</a>・
+            <a href="https://pubmed.ncbi.nlm.nih.gov/36237649/" data-i18n="reference2">胸腰椎・骨盤アライメント研究</a>・
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12583097/" data-i18n="reference3">荷重と脊柱屈曲・骨盤運動の研究</a>・
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6162543/" data-i18n="reference4">バー水平変位とセットアップの研究</a>・
+            <a href="https://www.nsca.com/education/articles/kinetic-select/romanian-deadlift-rdl/" data-i18n="reference5">NSCA RDL指導資料</a>・
+            <a href="https://www.acefitness.org/continuing-education/prosource/september-2015/5579/technique-series-how-to-deadlift/" data-i18n="reference6">ACEデッドリフト指導資料</a>・
+            <a href="https://www.airc.aist.go.jp/dhrt/91-92/index.html" data-i18n="reference7">AIST人体寸法データベース</a>・
+            <a href="https://doi.org/10.1518/001872095779064537" data-i18n="reference8">手動挙上の関節間協調研究</a>・
+            <a href="https://doi.org/10.1016/j.jelekin.2014.10.012" data-i18n="reference9">経験者デッドリフトの股関節・膝協調研究</a>・
+            <a href="https://www.crossfit.com/essentials/the-deadlift-hips-and-shoulders-rise-at-the-same-rate" data-i18n="reference10">股関節と肩の上昇を同期させる指導例</a>
+          </p>
+        </div>
+      </section>
+
+      <p id="play-status" class="status" aria-live="polite"></p>
+    </main>
+    <footer class="site-footer">
+      <span>
+        <strong><a href="https://hamsterspin.com" target="_blank" rel="noopener">HamsterSpin Motion Lab</a></strong>
+        · <a href="https://instagram.com/hamsterspin.lab" target="_blank" rel="noopener">@hamsterspin.lab</a>
+      </span>
+      <span data-i18n="footerNote">教育用の模式モデル · v0.3</span>
+      <span class="footer-license">
+        <span data-i18n="licensePrefix">© HamsterSpin — </span><a
+          href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank"
+          rel="license noopener"
+          data-i18n="licenseName">CC BY 4.0（表示）</a><span data-i18n="licenseSuffix">で提供しています。自由に利用・共有・改変できます。hamsterspin.com のクレジット表記をお願いします</span>
+      </span>
+    </footer>
+  </div>
+
+  <script>
+	    (() => {
+	      "use strict";
+
+	      const TRANSLATIONS = {
+	        ja: {
+	          documentTitle: "デッドリフト動作モデル | HamsterSpin Motion Lab",
+	          skipLink: "操作画面へ移動",
+	          pageTitle: "デッドリフト：股関節主導と多分節協調",
+	          lead: "足位置と重りの高さを共通の課題拘束として、股関節、膝、腰椎、胸椎、頸部がどのように協調して姿勢を合わせるかを比較します。比較側は検証用の協調仮説です。",
+	          motionControls: "動作コントロール",
+	          playAscent: "上昇を再生",
+	          playDescent: "下降を再生",
+	          pause: "一時停止",
+	          motionPosition: "動作位相",
+	          responseStrength: "モデル応答の強さ",
+	          coordinationPattern: "協調パターン",
+	          patternFlexion: "屈曲優位＋重り前方",
+	          patternExtension: "伸展優位＋膝前方",
+	          patternFlexionDetail: "屈曲優位（丸まり・重り前方流出）の協調パターン",
+	          patternExtensionDetail: "伸展優位（顎上げ・膝前方・上昇時の膝伸展先行）の協調仮説",
+	          timingKneeLead: "膝伸展先行＋股関節伸展遅延",
+	          ascent: "上昇",
+	          descent: "下降",
+	          overlay: "重ね合わせ",
+	          bodyProfile: "体節プロファイル",
+	          bodyProfileNote: "AIST日本人青年男性平均の比率を表示基準にした模式モデルです。診断用の正常範囲ではありません。",
+	          heightLabel: "身長",
+	          bodyRatioLabel: "体幹／大腿比",
+	          kinematicConstraints: "運動学的な固定条件",
+	          fixedFoot: "足底固定",
+	          multiSegment: "多分節協調",
+	          armsHanging: "腕は伸展位で下垂",
+	          fixedBoneLengths: "骨長一定",
+	          loadHeightConstraint: "重り高さを課題拘束",
+	          kneeTravelConstraint: "膝位置はつま先まで",
+	          hipDominant: "股関節主導",
+	          comparisonCoordination: "比較する協調",
+	          currentMetrics: "現在のモデル内指標",
+	          metricsCaption: "現在の動作位置における重り高さと前方変位、股関節、膝関節、脛骨傾斜、脊柱・頸部リンクの模式値",
+	          metric: "指標",
+	          loadHeight: "重り高さ",
+	          loadForwardDisplacement: "重りの前方変位",
+	          hipFlexion: "股関節屈曲",
+	          kneeFlexion: "膝関節屈曲",
+	          tibialInclination: "脛骨の前後傾",
+	          lowerLumbarAngle: "下部腰椎リンク相対角",
+	          upperLumbarAngle: "上部腰椎リンク相対角",
+	          thoracolumbarAngle: "胸腰移行リンク相対角",
+	          cervicalAngle: "頸部リンク相対角",
+	          spineMagnitude: "模式上の脊柱・頸部偏位量",
+	          scopeHeading: "用語とモデルの範囲",
+	          scope1: "「多分節協調」は、隣接する体節の相対運動を組み合わせた姿勢変化を指します。",
+	          scope2: "矢状面の準静的な課題拘束付き逆運動学モデルです。",
+	          scope3: "足底と重りの高さを共通にし、屈曲優位では膝位置を基準に保ったまま重りの水平移動を許します。",
+	          scope4: "伸展優位では重りの水平位置も保ち、脚が到達でき、膝がつま先を越えない範囲で膝・股関節を同時に解きます。バーと下腿の重なりは2次元投影上の表示として許容し、制約に達すると伸展応答を自動的に弱めます。",
+	          scope5: "屈曲優位・伸展優位は検証用の協調仮説で、一般的な人体反応や診断名ではありません。伸展優位の上昇では、膝伸展を先行させ、股関節と脊柱リンクの復帰を遅らせる時間差も仮定しています。",
+	          scope6: "脊柱が屈曲しても重りを身体の近くに保つ動作はあり、重りの前方流出は屈曲の必然ではありません。",
+	          scope7: "下向き矢印は重力方向、鼻は顎の向きと頸部伸展を示します。",
+	          scope8: "「モデル応答の強さ」は模式値で、質量、関節トルク、筋力、慣性、床反力は計算していません。",
+	          scope9: "股関節主導は指導上の目標です。関節名と表示角度は模式的で、実測値・診断・傷害判定値ではありません。",
+	          references: "参考資料：",
+	          reference1: "デッドリフトの多分節協調研究",
+	          reference2: "胸腰椎・骨盤アライメント研究",
+	          reference3: "荷重と脊柱屈曲・骨盤運動の研究",
+	          reference4: "バー水平変位とセットアップの研究",
+	          reference5: "NSCA RDL指導資料",
+	          reference6: "ACEデッドリフト指導資料",
+	          reference7: "AIST人体寸法データベース",
+	          reference8: "手動挙上の関節間協調研究",
+	          reference9: "経験者デッドリフトの股関節・膝協調研究",
+	          reference10: "股関節と肩の上昇を同期させる指導例",
+	          licensePrefix: "© HamsterSpin — ",
+	          licenseName: "CC BY 4.0（表示）",
+	          licenseSuffix: "で提供しています。自由に利用・共有・改変できます。hamsterspin.com のクレジット表記をお願いします",
+	          footerNote: "教育用の模式モデル · v0.3",
+	          stateBottom: "下降終点",
+	          stateLockout: "ロックアウト",
+	          stateMidAscent: "上昇途中",
+	          stateMidDescent: "下降途中",
+	          schematicValue: "模式値",
+	          requestedResponse: "要求",
+	          constrainedResponse: "制約後",
+	          geometryLimited: "脚の到達範囲・膝位置制約により応答を制限",
+	          sameFootLoadHeight: "同じ足位置・同じ重り高さ",
+	          sameFootLoadPosition: "同じ足位置・同じ重り位置",
+	          maintainSpineShape: "脊柱リンクの形を維持",
+	          overlayComparison: "重ね合わせ比較",
+	          weight: "重り",
+	          gravity: "重力",
+	          forward: "前方",
+	          backward: "後方",
+	          vertical: "垂直",
+	          anteriorTilt: "前傾",
+	          posteriorTilt: "後傾",
+	          flexion: "屈曲",
+	          extension: "伸展",
+	          playedAscent: "上昇アニメーションを再生しました。",
+	          playedDescent: "下降アニメーションを再生しました。",
+	          stopped: "アニメーションを停止しました。",
+	          reachedBottom: "設定した下降終点まで移動しました。",
+	          reachedLockout: "ロックアウトまで上昇しました。",
+	          reducedMotion: "動きの軽減設定に合わせ、停止状態で表示しています。"
+	        },
+	        en: {
+	          documentTitle: "Deadlift Movement Model | HamsterSpin Motion Lab",
+	          skipLink: "Skip to movement controls",
+	          pageTitle: "Deadlift: Hip-dominant strategy and multisegment coordination",
+	          lead: "Compare how the hips, knees, lumbar spine, thoracic spine, and neck coordinate under shared foot-position and load-height task constraints. The comparison is a coordination hypothesis for exploration.",
+	          motionControls: "Movement controls",
+	          playAscent: "Play ascent",
+	          playDescent: "Play descent",
+	          pause: "Pause",
+	          motionPosition: "Movement phase",
+	          responseStrength: "Model response strength",
+	          coordinationPattern: "Coordination pattern",
+          patternFlexion: "Flexion + load forward",
+          patternExtension: "Extension + knees forward",
+	          patternFlexionDetail: "a flexion-dominant pattern with spinal rounding and forward load drift",
+	          patternExtensionDetail: "an exploratory extension-dominant pattern with chin-up posture, forward knee travel, and early knee extension during ascent",
+	          timingKneeLead: "Early knee extension + delayed hip extension",
+	          ascent: "Ascent",
+	          descent: "Descent",
+	          overlay: "Overlay",
+	          bodyProfile: "Body-segment profile",
+	          bodyProfileNote: "Diagram proportions use the mean of young Japanese men in the AIST database as a display reference. This is not a diagnostic normal range.",
+	          heightLabel: "Height",
+	          bodyRatioLabel: "Torso / femur ratio",
+	          kinematicConstraints: "Kinematic constraints",
+	          fixedFoot: "Foot fixed",
+	          multiSegment: "Multisegment coordination",
+	          armsHanging: "Arms straight and relaxed",
+	          fixedBoneLengths: "Fixed segment lengths",
+	          loadHeightConstraint: "Load height as task constraint",
+	          kneeTravelConstraint: "Knee position limited to toe line",
+	          hipDominant: "Hip-dominant",
+	          comparisonCoordination: "Comparison pattern",
+	          currentMetrics: "Current model metrics",
+	          metricsCaption: "Schematic values for load height and drift, hip and knee flexion, tibial inclination, and spinal and cervical links at the current movement position",
+	          metric: "Metric",
+	          loadHeight: "Load height",
+	          loadForwardDisplacement: "Forward load drift",
+	          hipFlexion: "Hip flexion",
+	          kneeFlexion: "Knee flexion",
+	          tibialInclination: "Tibial inclination",
+	          lowerLumbarAngle: "Lower-lumbar relative angle",
+	          upperLumbarAngle: "Upper-lumbar relative angle",
+	          thoracolumbarAngle: "Thoracolumbar relative angle",
+	          cervicalAngle: "Cervical relative angle",
+	          spineMagnitude: "Schematic spinal and cervical deviation",
+	          scopeHeading: "Terms and model scope",
+	          scope1: "Multisegment coordination means a posture change produced by relative movement between adjacent body segments.",
+	          scope2: "This is a quasi-static, task-constrained inverse-kinematics model in the sagittal plane.",
+	          scope3: "Both sides share foot position and load height. The flexion-dominant pattern keeps the reference knee position while allowing horizontal load drift.",
+	          scope4: "The extension-dominant pattern also preserves horizontal load position and solves the knee and hip together while the leg remains reachable and the knee stays behind the toe. Shank–bar overlap is allowed as a two-dimensional projection, and extension response is reduced automatically when a hard constraint is reached.",
+	          scope5: "Flexion-dominant and extension-dominant are exploratory coordination hypotheses, not universal human responses or diagnoses. During ascent, the extension-dominant pattern also assumes early knee extension followed by delayed hip extension and restoration of the spinal links.",
+	          scope6: "A lifter can keep the load close while flexing the spine; forward load drift is not an inevitable result of spinal flexion.",
+	          scope7: "The downward arrow shows gravity. The nose makes chin direction and cervical extension easier to see.",
+	          scope8: "Model response strength is schematic. Mass, joint torque, muscle force, inertia, and ground-reaction force are not calculated.",
+	          scope9: "Hip-dominant movement is a coaching target here. Joint names and displayed angles are schematic, not measured, diagnostic, or injury-threshold values.",
+	          references: "References:",
+	          reference1: "Deadlift multisegment coordination study",
+	          reference2: "Thoracolumbar and pelvic alignment study",
+	          reference3: "Load, spinal flexion, and pelvic motion study",
+	          reference4: "Bar horizontal displacement and setup study",
+	          reference5: "NSCA Romanian deadlift guidance",
+	          reference6: "ACE deadlift technique guidance",
+	          reference7: "AIST Anthropometric Database",
+	          reference8: "Interjoint coordination in manual lifting",
+	          reference9: "Hip–knee coordination in experienced deadlifters",
+	          reference10: "Coaching example: hips and shoulders rise together",
+	          licensePrefix: "© HamsterSpin — Licensed under ",
+	          licenseName: "CC BY 4.0",
+	          licenseSuffix: ". Free to use, share, and adapt with attribution to hamsterspin.com",
+	          footerNote: "Educational schematic model · v0.3",
+	          stateBottom: "Bottom position",
+	          stateLockout: "Lockout",
+	          stateMidAscent: "Mid-ascent",
+	          stateMidDescent: "Mid-descent",
+	          schematicValue: "Schematic",
+	          requestedResponse: "Requested",
+	          constrainedResponse: "constrained",
+	          geometryLimited: "Response limited by leg reach or knee position",
+	          sameFootLoadHeight: "Same foot position and load height",
+	          sameFootLoadPosition: "Same foot and load position",
+	          maintainSpineShape: "Spinal-link shape maintained",
+	          overlayComparison: "Overlay comparison",
+	          weight: "Load",
+	          gravity: "Gravity",
+	          forward: "forward",
+	          backward: "backward",
+	          vertical: "Vertical",
+	          anteriorTilt: "forward",
+	          posteriorTilt: "backward",
+	          flexion: "Flexion",
+	          extension: "Extension",
+	          playedAscent: "Ascent animation started.",
+	          playedDescent: "Descent animation started.",
+	          stopped: "Animation stopped.",
+	          reachedBottom: "Reached the selected bottom position.",
+	          reachedLockout: "Reached lockout.",
+	          reducedMotion: "Shown paused to respect your reduced-motion setting."
+	        }
+	      };
+
+	      const requestedLanguage = new URLSearchParams(window.location.search).get("lang");
+	      let language = requestedLanguage === "ja" ? "ja" : "en";
+	      const translate = key => TRANSLATIONS[language][key] ?? key;
+
+	      const stageLabels = document.getElementById("stage-labels");
+	      const stageBrand = document.getElementById("stage-brand");
+	      const motionStage = document.getElementById("motion-stage");
+      const goodFigure = document.getElementById("good-figure");
+      const compareFigure = document.getElementById("compare-figure");
+      const progressInput = document.getElementById("progress");
+      const strategyInput = document.getElementById("strategy");
+      const patternInput = document.getElementById("pattern");
+      const overlayInput = document.getElementById("overlay");
+      const playButton = document.getElementById("play-button");
+      const progressOutput = document.getElementById("progress-output");
+      const strategyOutput = document.getElementById("strategy-output");
+      const phaseLabel = document.getElementById("phase-label");
+	      const playStatus = document.getElementById("play-status");
+	      const stageDescription = document.getElementById("stage-description");
+	      const heightInput = document.getElementById("height");
+	      const heightOutput = document.getElementById("height-output");
+	      const bodyRatioInput = document.getElementById("body-ratio");
+	      const bodyRatioOutput = document.getElementById("body-ratio-output");
+	      const profileSummary = document.getElementById("profile-summary");
+	      const languageButtons = document.querySelectorAll("[data-language]");
+
+      const cells = {
+        goodLoad: document.getElementById("good-load"),
+        compareLoad: document.getElementById("compare-load"),
+        goodDrift: document.getElementById("good-drift"),
+        compareDrift: document.getElementById("compare-drift"),
+        goodHip: document.getElementById("good-hip"),
+        compareHip: document.getElementById("compare-hip"),
+        goodKnee: document.getElementById("good-knee"),
+        compareKnee: document.getElementById("compare-knee"),
+        goodTibia: document.getElementById("good-tibia"),
+        compareTibia: document.getElementById("compare-tibia"),
+        goodLower: document.getElementById("good-lower"),
+        compareLower: document.getElementById("compare-lower"),
+        goodUpper: document.getElementById("good-upper"),
+        compareUpper: document.getElementById("compare-upper"),
+        goodThoracic: document.getElementById("good-thoracic"),
+        compareThoracic: document.getElementById("compare-thoracic"),
+        goodCervical: document.getElementById("good-cervical"),
+        compareCervical: document.getElementById("compare-cervical"),
+        goodTotal: document.getElementById("good-total"),
+        compareTotal: document.getElementById("compare-total")
+      };
+
+	      const AIST_PROFILE = {
+	        sampleHeightMm: 1714.0,
+	        trochanterionHeightMm: 857.5,
+	        acromialeHeightMm: 1380.1,
+	        thighMm: 409.2,
+	        shankMm: 394.6,
+	        upperArmMm: 313.0,
+	        forearmMm: 251.6,
+	        handMm: 190.0,
+	        footMm: 254.4
+	      };
+	      const defaultTorsoMm =
+	        AIST_PROFILE.acromialeHeightMm - AIST_PROFILE.trochanterionHeightMm;
+	      const defaultTorsoFemurRatio = defaultTorsoMm / AIST_PROFILE.thighMm;
+	      const lengths = {};
+
+      const GOOD_ENDPOINT = {
+        shank: 88,
+        femur: 145,
+        pelvis: 45,
+        lower: 45,
+        upper: 45,
+        thorax: 45,
+        head: 45
+      };
+
+	      const RESPONSE_PROFILES = {
+	        flexion: {
+	          labelKey: "patternFlexion",
+	          detailKey: "patternFlexionDetail",
+	          constraint: "height",
+          endpoint: {
+            pelvis: 61,
+            lower: 49,
+            upper: 37,
+            thorax: 25,
+            head: 21
+          }
+	        },
+	        extension: {
+	          labelKey: "patternExtension",
+	          detailKey: "patternExtensionDetail",
+	          constraint: "position",
+          endpoint: {
+            pelvis: 41.6,
+            lower: 51.8,
+            upper: 62,
+            thorax: 72.2,
+            head: 102.8
+          }
+        }
+      };
+
+	      let scale = 230;
+	      const groundY = 466;
+      let playing = false;
+      let playbackDirection = "ascent";
+      let progressValue = Number(progressInput.value);
+      let previousProgressValue = progressValue;
+      let lastFrameTime = null;
+      let animationFrame = null;
+      const compactMedia = window.matchMedia("(max-width: 36rem)");
+
+      const lerp = (a, b, amount) => a + (b - a) * amount;
+      const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
+      const radians = degrees => degrees * Math.PI / 180;
+	      const degrees = value => value * 180 / Math.PI;
+	      const smoothstep = value => value * value * (3 - 2 * value);
+	      const windowedSmoothstep = (value, start, end) => {
+	        if (end <= start) {
+	          return value >= end ? 1 : 0;
+	        }
+	        return smoothstep(clamp((value - start) / (end - start), 0, 1));
+	      };
+	      const smoothProjectToRange = (value, minimum, maximum, edgeWidth) => {
+	        if (maximum <= minimum) {
+	          return (minimum + maximum) / 2;
+	        }
+	        const width = Math.min(edgeWidth, (maximum - minimum) / 2);
+	        if (width <= 0) {
+	          return clamp(value, minimum, maximum);
+	        }
+	        if (value <= minimum) {
+	          return minimum;
+	        }
+	        if (value < minimum + width) {
+	          const phase = (value - minimum) / width;
+	          return minimum + width * (
+	            2 * phase ** 2 -
+	            phase ** 3
+	          );
+	        }
+	        if (value >= maximum) {
+	          return maximum;
+	        }
+	        if (value > maximum - width) {
+	          const phase = (maximum - value) / width;
+	          return maximum - width * (
+	            2 * phase ** 2 -
+	            phase ** 3
+	          );
+	        }
+	        return value;
+	      };
+
+	      function getPlayButtonKey() {
+	        if (playing) {
+	          return "pause";
+	        }
+	        return playbackDirection === "ascent" ? "playAscent" : "playDescent";
+	      }
+
+	      function applyTranslations() {
+	        document.documentElement.lang = language;
+	        document.title = translate("documentTitle");
+	        document.querySelector('meta[name="description"]').content = language === "ja"
+	          ? "HamsterSpin Motion Labのデッドリフト動作モデル。股関節主導と脊柱・膝の代償パターンを矢状面で比較します。"
+	          : "An interactive HamsterSpin Motion Lab deadlift model comparing a hip-dominant strategy with spinal and knee coordination patterns in the sagittal plane.";
+	        document.querySelectorAll("[data-i18n]").forEach(element => {
+	          element.textContent = translate(element.dataset.i18n);
+	        });
+	        document.querySelectorAll("[data-i18n-aria-label]").forEach(element => {
+	          element.setAttribute(
+	            "aria-label",
+	            translate(element.dataset.i18nAriaLabel)
+	          );
+	        });
+	        languageButtons.forEach(button => {
+	          button.setAttribute(
+	            "aria-pressed",
+	            String(button.dataset.language === language)
+	          );
+	        });
+	        document.getElementById("stage-title").textContent =
+	          language === "ja"
+	            ? "デッドリフトの股関節主導と多分節協調の比較"
+	            : "Deadlift comparison of hip-dominant and multisegment coordination";
+	        playButton.textContent = translate(getPlayButtonKey());
+	      }
+
+	      function updateAnthropometry() {
+	        const heightMeters = Number(heightInput.value) / 100;
+	        const ratioScale = Number(bodyRatioInput.value) / 100;
+	        const torsoFemurCombined =
+	          (defaultTorsoMm + AIST_PROFILE.thighMm) /
+	          AIST_PROFILE.sampleHeightMm *
+	          heightMeters;
+	        const torsoFemurRatio = defaultTorsoFemurRatio * ratioScale;
+	        const thigh = torsoFemurCombined / (1 + torsoFemurRatio);
+	        const trunk = torsoFemurCombined - thigh;
+	        const shank =
+	          AIST_PROFILE.shankMm / AIST_PROFILE.sampleHeightMm * heightMeters;
+	        const ankleHeight =
+	          (
+	            AIST_PROFILE.trochanterionHeightMm -
+	            AIST_PROFILE.thighMm -
+	            AIST_PROFILE.shankMm
+	          ) /
+	          AIST_PROFILE.sampleHeightMm *
+	          heightMeters;
+	        const neck = heightMeters * 0.045;
+	        const headOffset = heightMeters * 0.083;
+
+	        lengths.ankleHeight = ankleHeight;
+	        lengths.shank = shank;
+	        lengths.thigh = thigh;
+	        lengths.pelvis = trunk * 0.16;
+	        lengths.lowerLumbar = trunk * 0.20;
+	        lengths.upperLumbar = trunk * 0.20;
+	        lengths.thorax = trunk * 0.44;
+	        lengths.neck = neck;
+	        lengths.headOffset = headOffset;
+	        lengths.headRadius = heightMeters - (
+	          ankleHeight +
+	          shank +
+	          thigh +
+	          trunk +
+	          neck +
+	          headOffset
+	        );
+	        lengths.upperArm =
+	          AIST_PROFILE.upperArmMm /
+	          AIST_PROFILE.sampleHeightMm *
+	          heightMeters;
+	        lengths.forearm =
+	          (AIST_PROFILE.forearmMm + AIST_PROFILE.handMm) /
+	          AIST_PROFILE.sampleHeightMm *
+	          heightMeters;
+	        lengths.foot =
+	          AIST_PROFILE.footMm /
+	          AIST_PROFILE.sampleHeightMm *
+	          heightMeters;
+	        scale = 410 / heightMeters;
+
+	        heightOutput.textContent = `${Math.round(heightMeters * 100)} cm`;
+	        bodyRatioOutput.textContent = torsoFemurRatio.toFixed(2);
+	        profileSummary.textContent = language === "ja"
+	          ? (
+	              `体幹 ${(trunk * 100).toFixed(1)} cm · ` +
+	              `大腿 ${(thigh * 100).toFixed(1)} cm · ` +
+	              `下腿 ${(shank * 100).toFixed(1)} cm · ` +
+	              `足長 ${(lengths.foot * 100).toFixed(1)} cm`
+	            )
+	          : (
+	              `Torso ${(trunk * 100).toFixed(1)} cm · ` +
+	              `Femur ${(thigh * 100).toFixed(1)} cm · ` +
+	              `Lower leg ${(shank * 100).toFixed(1)} cm · ` +
+	              `Foot ${(lengths.foot * 100).toFixed(1)} cm`
+	            );
+	      }
+
+	      function syncUrlState() {
+	        const url = new URL(window.location.href);
+	        url.searchParams.set("lang", language);
+	        url.searchParams.set("height", heightInput.value);
+	        url.searchParams.set("ratio", bodyRatioInput.value);
+	        url.searchParams.set("pattern", patternInput.value);
+	        window.history.replaceState(null, "", url);
+	      }
+
+	      function readUrlState() {
+	        const parameters = new URLSearchParams(window.location.search);
+	        const height = Number(parameters.get("height"));
+	        const ratio = Number(parameters.get("ratio"));
+	        const pattern = parameters.get("pattern");
+
+	        if (Number.isFinite(height) && height >= 150 && height <= 200) {
+	          heightInput.value = String(height);
+	        }
+	        if (Number.isFinite(ratio) && ratio >= 85 && ratio <= 115) {
+	          bodyRatioInput.value = String(ratio);
+	        }
+	        if (pattern === "flexion" || pattern === "extension") {
+	          patternInput.value = pattern;
+	        }
+	      }
+
+	      function pointFrom(point, length, angleDegrees) {
+        const angle = radians(angleDegrees);
+        return {
+          x: point.x + Math.cos(angle) * length,
+          y: point.y + Math.sin(angle) * length
+        };
+      }
+
+      function angleDistance(a, b) {
+        return Math.abs(((a - b + 540) % 360) - 180);
+      }
+
+      function solveLegIK(ankle, targetHip) {
+        const dx = targetHip.x - ankle.x;
+        const dy = targetHip.y - ankle.y;
+        const distanceSquared = dx * dx + dy * dy;
+        const minimumReach = Math.abs(lengths.shank - lengths.thigh);
+        const maximumReach = lengths.shank + lengths.thigh;
+        const distance = Math.sqrt(distanceSquared);
+        const cosineBend = clamp(
+          (distanceSquared - lengths.shank ** 2 - lengths.thigh ** 2) /
+            (2 * lengths.shank * lengths.thigh),
+          -1,
+          1
+        );
+        const bend = Math.acos(cosineBend);
+        const shank = Math.atan2(dy, dx) - Math.atan2(
+          lengths.thigh * Math.sin(bend),
+          lengths.shank + lengths.thigh * Math.cos(bend)
+        );
+
+        return {
+          shankAngle: degrees(shank),
+          femurAngle: degrees(shank + bend),
+          reachable:
+            distance >= minimumReach - 0.000001 &&
+            distance <= maximumReach + 0.000001
+        };
+      }
+
+      function solveLegForHandHeight(
+        shankAngle,
+        preferredFemurAngle,
+        targetHandY,
+        trunkOffsetY
+      ) {
+	        const ankle = { x: 0, y: lengths.ankleHeight };
+        const knee = pointFrom(ankle, lengths.shank, shankAngle);
+        const shoulderTargetY =
+          targetHandY + lengths.upperArm + lengths.forearm;
+        const targetHipY = shoulderTargetY - trunkOffsetY;
+        const normalizedHeight =
+          (targetHipY - knee.y) / lengths.thigh;
+        const principalAngle = degrees(
+          Math.asin(clamp(normalizedHeight, -1, 1))
+        );
+        const candidates = [principalAngle, 180 - principalAngle];
+        const femurAngle = candidates.reduce((closest, candidate) =>
+          angleDistance(candidate, preferredFemurAngle) <
+          angleDistance(closest, preferredFemurAngle)
+            ? candidate
+            : closest
+        );
+
+        return {
+          shankAngle,
+          femurAngle,
+          reachable: Math.abs(normalizedHeight) <= 1
+        };
+      }
+
+      function assemblePose(angles, targetHand = null, ikReachable = true) {
+        const {
+          shank: shankAngle,
+          femur: femurAngle,
+          pelvis: pelvisAngle,
+          lower: lowerAngle,
+          upper: upperAngle,
+          thorax: thoraxAngle,
+          head: headAngle
+        } = angles;
+	        const ankle = { x: 0, y: lengths.ankleHeight };
+        const knee = pointFrom(ankle, lengths.shank, shankAngle);
+        const hip = pointFrom(knee, lengths.thigh, femurAngle);
+        const sacrum = pointFrom(hip, lengths.pelvis, pelvisAngle);
+        const lowerLumbar = pointFrom(sacrum, lengths.lowerLumbar, lowerAngle);
+        const upperLumbar = pointFrom(lowerLumbar, lengths.upperLumbar, upperAngle);
+        const shoulder = pointFrom(upperLumbar, lengths.thorax, thoraxAngle);
+        const neck = pointFrom(shoulder, lengths.neck, thoraxAngle);
+        const head = pointFrom(neck, lengths.headOffset, headAngle);
+
+        const elbow = {
+          x: shoulder.x,
+          y: shoulder.y - lengths.upperArm
+        };
+        const hand = {
+          x: shoulder.x,
+          y: shoulder.y - lengths.upperArm - lengths.forearm
+        };
+
+        const hipToKneeAngle = (femurAngle + 180) % 360;
+        const hipFlexion = Math.max(
+          0,
+          180 - angleDistance(hipToKneeAngle, pelvisAngle)
+        );
+        const kneeFlexion = Math.abs(femurAngle - shankAngle);
+        const tibialInclination = 90 - shankAngle;
+        const l5s1 = pelvisAngle - lowerAngle;
+        const l2l3 = lowerAngle - upperAngle;
+        const t12l1 = upperAngle - thoraxAngle;
+        const cervical = thoraxAngle - headAngle;
+        const ikResidual = targetHand === null
+          ? 0
+          : Math.hypot(hand.x - targetHand.x, hand.y - targetHand.y);
+
+        return {
+          ankle,
+          knee,
+          hip,
+          sacrum,
+          lowerLumbar,
+          upperLumbar,
+          shoulder,
+          neck,
+          head,
+          elbow,
+          hand,
+          shankAngle,
+          femurAngle,
+          pelvisAngle,
+          lowerAngle,
+          upperAngle,
+          thoraxAngle,
+          headAngle,
+          hipFlexion,
+          kneeFlexion,
+          tibialInclination,
+          l5s1,
+          l2l3,
+          t12l1,
+          cervical,
+          spineMagnitude:
+            Math.abs(l5s1) +
+            Math.abs(l2l3) +
+            Math.abs(t12l1) +
+            Math.abs(cervical),
+          loadHeight: hand.y,
+          ikResidual,
+          ikReachable
+        };
+      }
+
+      function buildReferencePose(progress) {
+        const motion = smoothstep(progress);
+        const angles = {};
+
+        Object.keys(GOOD_ENDPOINT).forEach(key => {
+          angles[key] = lerp(GOOD_ENDPOINT[key], 90, motion);
+        });
+
+        return assemblePose(angles);
+      }
+
+      function extensionSpineMotion(progress, direction) {
+        if (direction === "ascent") {
+          return windowedSmoothstep(progress, 0.24, 1);
+        }
+
+        const descentPhase = 1 - progress;
+        return 1 - windowedSmoothstep(descentPhase, 0, 0.76);
+      }
+
+      function trunkOffsetForAngles(spineAngles) {
+        return [
+          [lengths.pelvis, spineAngles.pelvis],
+          [lengths.lowerLumbar, spineAngles.lower],
+          [lengths.upperLumbar, spineAngles.upper],
+          [lengths.thorax, spineAngles.thorax]
+        ].reduce((offset, [length, angle]) => {
+          const vector = pointFrom({ x: 0, y: 0 }, length, angle);
+          return {
+            x: offset.x + vector.x,
+            y: offset.y + vector.y
+          };
+        }, { x: 0, y: 0 });
+      }
+
+      function closestCircleIntersection(
+        centerA,
+        radiusA,
+        centerB,
+        radiusB,
+        preferredPoint
+      ) {
+        const dx = centerB.x - centerA.x;
+        const dy = centerB.y - centerA.y;
+        const distance = Math.hypot(dx, dy);
+        const tolerance = 0.000001;
+
+        if (
+          distance < tolerance ||
+          distance > radiusA + radiusB + tolerance ||
+          distance < Math.abs(radiusA - radiusB) - tolerance
+        ) {
+          return null;
+        }
+
+        const along = (
+          radiusA ** 2 -
+          radiusB ** 2 +
+          distance ** 2
+        ) / (2 * distance);
+        const height = Math.sqrt(Math.max(0, radiusA ** 2 - along ** 2));
+        const base = {
+          x: centerA.x + along * dx / distance,
+          y: centerA.y + along * dy / distance
+        };
+        const perpendicular = {
+          x: -dy / distance,
+          y: dx / distance
+        };
+        const candidates = [
+          {
+            x: base.x + height * perpendicular.x,
+            y: base.y + height * perpendicular.y
+          },
+          {
+            x: base.x - height * perpendicular.x,
+            y: base.y - height * perpendicular.y
+          }
+        ];
+        const distanceToPreferred = point => Math.hypot(
+          point.x - preferredPoint.x,
+          point.y - preferredPoint.y
+        );
+
+        return distanceToPreferred(candidates[0]) <=
+          distanceToPreferred(candidates[1])
+          ? candidates[0]
+          : candidates[1];
+      }
+
+      function solveExtensionTimingPose(
+        spineAngles,
+        targetHand,
+        targetKneeFlexion,
+        preferredHip
+      ) {
+        const ankle = { x: 0, y: lengths.ankleHeight };
+        const shoulderTarget = {
+          x: targetHand.x,
+          y: targetHand.y + lengths.upperArm + lengths.forearm
+        };
+        const trunkOffset = trunkOffsetForAngles(spineAngles);
+        const trunkReach = Math.hypot(trunkOffset.x, trunkOffset.y);
+        const shoulderDistance = Math.hypot(
+          shoulderTarget.x - ankle.x,
+          shoulderTarget.y - ankle.y
+        );
+        const minimumLegReach = Math.max(
+          Math.abs(lengths.shank - lengths.thigh),
+          Math.abs(shoulderDistance - trunkReach)
+        );
+        const maximumLegReach = Math.min(
+          lengths.shank + lengths.thigh,
+          shoulderDistance + trunkReach
+        );
+
+        if (minimumLegReach > maximumLegReach + 0.000001) {
+          return null;
+        }
+
+        const kneeFlexionForReach = reach => degrees(Math.acos(clamp(
+          (
+            reach ** 2 -
+            lengths.shank ** 2 -
+            lengths.thigh ** 2
+          ) / (2 * lengths.shank * lengths.thigh),
+          -1,
+          1
+        )));
+        const minimumKneeFlexion = kneeFlexionForReach(maximumLegReach);
+        const maximumKneeFlexion = kneeFlexionForReach(minimumLegReach);
+        const projectedKneeFlexion = smoothProjectToRange(
+          clamp(targetKneeFlexion, 0, 179),
+          minimumKneeFlexion,
+          maximumKneeFlexion,
+          4
+        );
+        const kneeBend = radians(projectedKneeFlexion);
+        const legReach = Math.sqrt(
+          lengths.shank ** 2 +
+          lengths.thigh ** 2 +
+          2 * lengths.shank * lengths.thigh * Math.cos(kneeBend)
+        );
+        const hip = closestCircleIntersection(
+          ankle,
+          legReach,
+          shoulderTarget,
+          trunkReach,
+          preferredHip
+        );
+
+        if (hip === null) {
+          return null;
+        }
+
+        const legDirection = Math.atan2(
+          hip.y - ankle.y,
+          hip.x - ankle.x
+        );
+        const shankAngle = degrees(
+          legDirection -
+          Math.atan2(
+            lengths.thigh * Math.sin(kneeBend),
+            lengths.shank + lengths.thigh * Math.cos(kneeBend)
+          )
+        );
+        const femurAngle = shankAngle + degrees(kneeBend);
+        const trunkDirection = Math.atan2(
+          shoulderTarget.y - hip.y,
+          shoulderTarget.x - hip.x
+        );
+        const baseTrunkDirection = Math.atan2(
+          trunkOffset.y,
+          trunkOffset.x
+        );
+        const trunkRotation = degrees(trunkDirection - baseTrunkDirection);
+        const rotatedSpineAngles = {};
+
+        ["pelvis", "lower", "upper", "thorax", "head"].forEach(key => {
+          rotatedSpineAngles[key] = spineAngles[key] + trunkRotation;
+        });
+
+        return {
+          shankAngle,
+          femurAngle,
+          spineAngles: rotatedSpineAngles
+        };
+      }
+
+      function buildResponsePoseAtEffect(
+        progress,
+        loadEffect,
+        profileName,
+        targetHand,
+        direction
+      ) {
+        const profile = RESPONSE_PROFILES[profileName];
+        const referenceMotion = smoothstep(progress);
+        const motion = profileName === "extension"
+          ? lerp(
+              referenceMotion,
+              extensionSpineMotion(progress, direction),
+              loadEffect
+            )
+          : referenceMotion;
+        const endpoint = profile.endpoint;
+        const spineAngles = {};
+
+        ["pelvis", "lower", "upper", "thorax", "head"].forEach(key => {
+          const loadedEndpoint = lerp(GOOD_ENDPOINT[key], endpoint[key], loadEffect);
+          spineAngles[key] = lerp(loadedEndpoint, 90, motion);
+        });
+
+        const shoulderTarget = {
+          x: targetHand.x,
+          y: targetHand.y + lengths.upperArm + lengths.forearm
+        };
+        const trunkOffset = trunkOffsetForAngles(spineAngles);
+        const targetHip = {
+          x: shoulderTarget.x - trunkOffset.x,
+          y: shoulderTarget.y - trunkOffset.y
+        };
+	        const ankle = { x: 0, y: lengths.ankleHeight };
+        const referenceShank = lerp(GOOD_ENDPOINT.shank, 90, motion);
+        const referenceFemur = lerp(GOOD_ENDPOINT.femur, 90, motion);
+        let leg = profile.constraint === "height"
+          ? solveLegForHandHeight(
+              referenceShank,
+              referenceFemur,
+              targetHand.y,
+              trunkOffset.y
+            )
+          : solveLegIK(ankle, targetHip);
+
+        if (profileName === "extension") {
+          const bottomSpineAngles = {};
+          ["pelvis", "lower", "upper", "thorax", "head"].forEach(key => {
+            bottomSpineAngles[key] = lerp(
+              GOOD_ENDPOINT[key],
+              endpoint[key],
+              loadEffect
+            );
+          });
+          const bottomHand = buildReferencePose(0).hand;
+          const bottomShoulderTarget = {
+            x: bottomHand.x,
+            y: bottomHand.y + lengths.upperArm + lengths.forearm
+          };
+          const bottomTrunkOffset = trunkOffsetForAngles(bottomSpineAngles);
+          const bottomTargetHip = {
+            x: bottomShoulderTarget.x - bottomTrunkOffset.x,
+            y: bottomShoulderTarget.y - bottomTrunkOffset.y
+          };
+          const bottomLeg = solveLegIK(ankle, bottomTargetHip);
+          const bottomKneeFlexion = Math.abs(
+            bottomLeg.femurAngle - bottomLeg.shankAngle
+          );
+          const ordinaryKneeFlexion = Math.abs(
+            leg.femurAngle - leg.shankAngle
+          );
+          const acceleratedKneeFlexion = direction === "ascent"
+            ? lerp(
+                bottomKneeFlexion,
+                0,
+                windowedSmoothstep(progress, 0, 0.75)
+              )
+            : bottomKneeFlexion * windowedSmoothstep(
+                1 - progress,
+                0.3,
+                1
+              );
+          const targetKneeFlexion = lerp(
+            ordinaryKneeFlexion,
+            acceleratedKneeFlexion,
+            loadEffect
+          );
+          const timedPose = solveExtensionTimingPose(
+            spineAngles,
+            targetHand,
+            targetKneeFlexion,
+            targetHip
+          );
+
+          if (timedPose !== null) {
+            leg = {
+              shankAngle: timedPose.shankAngle,
+              femurAngle: timedPose.femurAngle,
+              reachable: true
+            };
+            Object.assign(spineAngles, timedPose.spineAngles);
+          } else {
+            leg.reachable = false;
+          }
+        }
+
+        return assemblePose({
+          shank: leg.shankAngle,
+          femur: leg.femurAngle,
+          ...spineAngles
+        }, targetHand, leg.reachable);
+      }
+
+      function extensionConstraints(pose) {
+        const toeX = lengths.foot * 0.68;
+        const tolerance = 0.0005;
+
+        return {
+          toeX,
+          kneeWithinToe: pose.knee.x <= toeX + tolerance
+        };
+      }
+
+      function addResponseMetadata(
+        pose,
+        requestedResponse,
+        effectiveResponse
+      ) {
+        const constraints = extensionConstraints(pose);
+        pose.requestedResponse = requestedResponse;
+        pose.effectiveResponse = effectiveResponse;
+        pose.constraintLimited =
+          effectiveResponse < requestedResponse - 0.0005;
+        pose.toeX = constraints.toeX;
+        return pose;
+      }
+
+      function buildResponsePose(
+        progress,
+        loadEffect,
+        profileName,
+        referencePose,
+        direction
+      ) {
+        const targetHand = referencePose.hand;
+        const requestedPose = buildResponsePoseAtEffect(
+          progress,
+          loadEffect,
+          profileName,
+          targetHand,
+          direction
+        );
+
+        if (profileName !== "extension") {
+          return addResponseMetadata(
+            requestedPose,
+            loadEffect,
+            loadEffect
+          );
+        }
+
+        const requestedConstraints = extensionConstraints(requestedPose);
+        if (
+          requestedPose.ikReachable &&
+          requestedConstraints.kneeWithinToe
+        ) {
+          return addResponseMetadata(
+            requestedPose,
+            loadEffect,
+            loadEffect
+          );
+        }
+
+        let minimum = 0;
+        let maximum = loadEffect;
+
+        for (let iteration = 0; iteration < 28; iteration += 1) {
+          const candidateEffect = (minimum + maximum) / 2;
+          const candidatePose = buildResponsePoseAtEffect(
+            progress,
+            candidateEffect,
+            profileName,
+            targetHand,
+            direction
+          );
+          const candidateConstraints = extensionConstraints(candidatePose);
+          const candidateAllowed =
+            candidatePose.ikReachable &&
+            candidateConstraints.kneeWithinToe;
+
+          if (candidateAllowed) {
+            minimum = candidateEffect;
+          } else {
+            maximum = candidateEffect;
+          }
+        }
+
+        const constrainedPose = buildResponsePoseAtEffect(
+          progress,
+          minimum,
+          profileName,
+          targetHand,
+          direction
+        );
+        return addResponseMetadata(
+          constrainedPose,
+          loadEffect,
+          minimum
+        );
+      }
+
+      function screenPoint(point, originX) {
+        return {
+          x: originX + point.x * scale,
+          y: groundY - point.y * scale
+        };
+      }
+
+      function coordinate(point, originX) {
+        const mapped = screenPoint(point, originX);
+        return `${mapped.x.toFixed(1)},${mapped.y.toFixed(1)}`;
+      }
+
+      function line(a, b, className, originX) {
+        const p1 = screenPoint(a, originX);
+        const p2 = screenPoint(b, originX);
+        return (
+          `<line class="${className}" x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" ` +
+          `x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}"/>`
+        );
+      }
+
+      function joint(point, className, originX, radius = 6) {
+        const mapped = screenPoint(point, originX);
+        return (
+          `<circle class="joint ${className}" cx="${mapped.x.toFixed(1)}" ` +
+          `cy="${mapped.y.toFixed(1)}" r="${radius}"/>`
+        );
+      }
+
+      function polyline(points, className, originX) {
+        const data = points.map(point => coordinate(point, originX)).join(" ");
+        return `<polyline class="${className}" points="${data}"/>`;
+      }
+
+      function hipArc(pose, originX, className) {
+        const center = screenPoint(pose.hip, originX);
+        const radius = 27;
+        const startAngle = radians(-pose.femurAngle);
+        const endAngle = radians(-pose.pelvisAngle);
+        const start = {
+          x: center.x + Math.cos(startAngle) * radius,
+          y: center.y + Math.sin(startAngle) * radius
+        };
+        const end = {
+          x: center.x + Math.cos(endAngle) * radius,
+          y: center.y + Math.sin(endAngle) * radius
+        };
+        const largeArc = pose.hipFlexion > 180 ? 1 : 0;
+        return (
+          `<path class="angle-mark ${className}" d="M ${start.x.toFixed(1)} ${start.y.toFixed(1)} ` +
+          `A ${radius} ${radius} 0 ${largeArc} 0 ${end.x.toFixed(1)} ${end.y.toFixed(1)}"/>`
+        );
+      }
+
+      function noseMarkup(pose, originX) {
+        const faceAngle = pose.headAngle - 90;
+        const root = pointFrom(pose.head, lengths.headRadius * 0.87, faceAngle);
+        const tip = pointFrom(pose.head, lengths.headRadius * 1.60, faceAngle);
+        const upper = pointFrom(root, lengths.headRadius * 0.25, faceAngle + 90);
+        const lower = pointFrom(root, lengths.headRadius * 0.25, faceAngle - 90);
+        return (
+          `<path class="nose" d="M ${coordinate(upper, originX)} ` +
+          `L ${coordinate(tip, originX)} L ${coordinate(lower, originX)} Z"/>`
+        );
+      }
+
+      function environmentMarkup(originX) {
+        const groundLeft = originX - 185;
+        const groundRight = originX + 185;
+        return `<line class="ground" x1="${groundLeft}" y1="${groundY}" x2="${groundRight}" y2="${groundY}"/>`;
+      }
+
+      function figureMarkup(pose, originX, kind, options = {}) {
+        const isGood = kind === "good";
+        const spineClass = isGood ? "spine-good" : "spine-compare";
+        const spineJointClass = isGood ? "joint-spine-good" : "joint-spine-compare";
+        const angleClass = isGood ? "angle-good" : "angle-compare";
+        const heel = { x: lengths.foot * -0.32, y: 0.012 };
+        const forefoot = { x: lengths.foot * 0.44, y: 0.012 };
+        const toe = { x: lengths.foot * 0.68, y: 0.008 };
+        const head = screenPoint(pose.head, originX);
+        const hand = screenPoint(pose.hand, originX);
+        let markup = options.showEnvironment === false ? "" : environmentMarkup(originX);
+
+        if (options.referencePose) {
+          markup += polyline(
+            [
+              options.referencePose.sacrum,
+              options.referencePose.lowerLumbar,
+              options.referencePose.upperLumbar,
+              options.referencePose.shoulder
+            ],
+            "spine-reference",
+            originX
+          );
+        }
+
+        markup += polyline([heel, pose.ankle, forefoot, toe], "limb", originX);
+        markup += line(pose.ankle, pose.knee, "limb", originX);
+        markup += line(pose.knee, pose.hip, "limb", originX);
+        markup += line(pose.hip, pose.sacrum, "pelvis", originX);
+        markup += polyline(
+          [pose.sacrum, pose.lowerLumbar, pose.upperLumbar, pose.shoulder],
+          spineClass,
+          originX
+        );
+        markup += line(pose.shoulder, pose.elbow, "limb", originX);
+        markup += line(pose.elbow, pose.hand, "limb", originX);
+        markup += line(pose.shoulder, pose.neck, "limb", originX);
+        markup += (
+          `<circle class="head" cx="${head.x.toFixed(1)}" cy="${head.y.toFixed(1)}" ` +
+          `r="${(lengths.headRadius * scale).toFixed(1)}"/>`
+        );
+        markup += noseMarkup(pose, originX);
+        if (options.showLoad !== false) {
+          const loadClass = options.compareLoad ? " compare-load" : "";
+          if (options.compactLoad) {
+            markup += `<circle class="barbell${loadClass}" cx="${hand.x.toFixed(1)}" cy="${hand.y.toFixed(1)}" r="15"/>`;
+          } else {
+            const forceEnd = Math.min(hand.y + 72, groundY - 6);
+            markup += `<line class="bar-shaft${loadClass}" x1="${(hand.x - 24).toFixed(1)}" y1="${hand.y.toFixed(1)}" ` +
+              `x2="${(hand.x + 24).toFixed(1)}" y2="${hand.y.toFixed(1)}"/>`;
+            markup += `<circle class="barbell${loadClass}" cx="${hand.x.toFixed(1)}" cy="${hand.y.toFixed(1)}" r="15"/>`;
+            markup += (
+              `<text class="weight-label" x="${(hand.x + 28).toFixed(1)}" ` +
+              `y="${(hand.y + 4).toFixed(1)}">${translate("weight")}</text>`
+            );
+            markup += (
+              `<line class="force-line" x1="${hand.x.toFixed(1)}" y1="${(hand.y + 19).toFixed(1)}" ` +
+              `x2="${hand.x.toFixed(1)}" y2="${(forceEnd - 10).toFixed(1)}"/>` +
+              `<path class="force-arrow" d="M ${(hand.x - 6).toFixed(1)} ${(forceEnd - 11).toFixed(1)} ` +
+              `L ${hand.x.toFixed(1)} ${forceEnd.toFixed(1)} ` +
+              `L ${(hand.x + 6).toFixed(1)} ${(forceEnd - 11).toFixed(1)} Z"/>` +
+              `<text class="force-label" x="${(hand.x + 10).toFixed(1)}" ` +
+              `y="${(hand.y + 46).toFixed(1)}">${translate("gravity")}</text>`
+            );
+          }
+        }
+
+        markup += joint(pose.ankle, "", originX);
+        markup += joint(pose.knee, "", originX);
+        markup += joint(pose.hip, spineJointClass, originX, 7);
+        markup += joint(pose.sacrum, spineJointClass, originX, 5);
+        markup += joint(pose.lowerLumbar, spineJointClass, originX, 5);
+        markup += joint(pose.upperLumbar, spineJointClass, originX, 5);
+        markup += joint(pose.shoulder, "", originX);
+        markup += joint(pose.elbow, "", originX);
+        markup += hipArc(pose, originX, angleClass);
+        return markup;
+      }
+
+      function formatAngle(value) {
+        return `${Math.round(value)}°`;
+      }
+
+      function formatHeight(value) {
+        return `${Math.round(value * 100)} cm`;
+      }
+
+      function formatDisplacement(value) {
+        const centimeters = Math.round(Math.abs(value) * 100);
+        if (centimeters === 0) {
+          return "0 cm";
+        }
+        if (language === "en") {
+          return `${centimeters} cm ${translate(value > 0 ? "forward" : "backward")}`;
+        }
+        return `${translate(value > 0 ? "forward" : "backward")} ${centimeters} cm`;
+      }
+
+      function formatInclination(value) {
+        const rounded = Math.round(Math.abs(value));
+        if (rounded === 0) {
+          return `${translate("vertical")} 0°`;
+        }
+        if (language === "en") {
+          return `${rounded}° ${translate(value > 0 ? "anteriorTilt" : "posteriorTilt")}`;
+        }
+        return `${translate(value > 0 ? "anteriorTilt" : "posteriorTilt")} ${rounded}°`;
+      }
+
+      function formatSpineChange(value) {
+        const rounded = Math.round(Math.abs(value));
+        if (rounded === 0) {
+          return "0°";
+        }
+        return `${translate(value > 0 ? "flexion" : "extension")} ${rounded}°`;
+      }
+
+      function updateTable(good, compare) {
+        cells.goodLoad.textContent = formatHeight(good.loadHeight);
+        cells.compareLoad.textContent = formatHeight(compare.loadHeight);
+        cells.goodDrift.textContent = "0 cm";
+        cells.compareDrift.textContent =
+          formatDisplacement(compare.hand.x - good.hand.x);
+        cells.goodHip.textContent = formatAngle(good.hipFlexion);
+        cells.compareHip.textContent = formatAngle(compare.hipFlexion);
+        cells.goodKnee.textContent = formatAngle(good.kneeFlexion);
+        cells.compareKnee.textContent = formatAngle(compare.kneeFlexion);
+        cells.goodTibia.textContent = formatInclination(good.tibialInclination);
+        cells.compareTibia.textContent = formatInclination(compare.tibialInclination);
+        cells.goodLower.textContent = formatSpineChange(good.l5s1);
+        cells.compareLower.textContent = formatSpineChange(compare.l5s1);
+        cells.goodUpper.textContent = formatSpineChange(good.l2l3);
+        cells.compareUpper.textContent = formatSpineChange(compare.l2l3);
+        cells.goodThoracic.textContent = formatSpineChange(good.t12l1);
+        cells.compareThoracic.textContent = formatSpineChange(compare.t12l1);
+        cells.goodCervical.textContent = formatSpineChange(good.cervical);
+        cells.compareCervical.textContent = formatSpineChange(compare.cervical);
+        cells.goodTotal.textContent = formatAngle(good.spineMagnitude);
+        cells.compareTotal.textContent = formatAngle(compare.spineMagnitude);
+      }
+
+      function updateLabels(
+        progress,
+        direction,
+        strategy,
+        effectiveStrategy,
+        constraintLimited,
+        overlay,
+        compact,
+        pattern,
+        loadHeight,
+        loadDisplacement
+      ) {
+        const stateLabel = progress < 0.12
+          ? translate("stateBottom")
+          : progress > 0.88
+            ? translate("stateLockout")
+            : translate(
+                direction === "ascent"
+                  ? "stateMidAscent"
+                  : "stateMidDescent"
+              );
+        const directionLabel = translate(direction);
+        const phaseProgress = direction === "ascent"
+          ? progress
+          : 1 - progress;
+        const patternLabel = translate(RESPONSE_PROFILES[pattern].labelKey);
+        const patternDetail = translate(RESPONSE_PROFILES[pattern].detailKey);
+        const timingLabel =
+          pattern === "extension" && direction === "ascent" && progress < 0.99
+            ? translate("timingKneeLead")
+            : "";
+        const loadLabel = formatHeight(loadHeight);
+        const displacementLabel = formatDisplacement(loadDisplacement);
+        const constraintLabel = pattern === "flexion"
+          ? translate("sameFootLoadHeight")
+          : translate("sameFootLoadPosition");
+        const requestedPercent = Math.round(strategy * 100);
+        const effectivePercent = Math.round(effectiveStrategy * 100);
+        const responseLabel = constraintLimited
+          ? `${translate("constrainedResponse")} ${effectivePercent}%`
+          : `${translate("schematicValue")} ${requestedPercent}%`;
+        const geometryNote = constraintLimited
+          ? `${translate("geometryLimited")} ${effectivePercent}%`
+          : "";
+
+        phaseLabel.textContent = `${directionLabel} · ${stateLabel}`;
+        progressOutput.textContent = language === "ja"
+          ? `${directionLabel} ${Math.round(phaseProgress * 100)}%・${stateLabel}・重り高 ${loadLabel}`
+          : `${directionLabel} ${Math.round(phaseProgress * 100)}% · ${stateLabel} · load ${loadLabel}`;
+        strategyOutput.textContent = constraintLimited
+          ? (
+              `${translate("requestedResponse")} ${requestedPercent}% · ` +
+              `${translate("constrainedResponse")} ${effectivePercent}%`
+            )
+          : `${translate("schematicValue")} ${requestedPercent}%`;
+        progressInput.setAttribute(
+          "aria-valuetext",
+          language === "ja"
+            ? `${directionLabel}${Math.round(phaseProgress * 100)}パーセント、${stateLabel}、重り高さ${loadLabel}`
+            : `${directionLabel} ${Math.round(phaseProgress * 100)} percent, ${stateLabel}, load height ${loadLabel}`
+        );
+        strategyInput.setAttribute(
+          "aria-valuetext",
+          constraintLimited
+            ? (
+                language === "ja"
+                  ? `モデル応答の強さ、要求${requestedPercent}パーセント、脚の到達範囲と膝位置の制約後${effectivePercent}パーセント`
+                  : `Model response strength, requested ${requestedPercent} percent, constrained to ${effectivePercent} percent by leg reach or knee position`
+              )
+            : (
+                language === "ja"
+                  ? `モデル応答の強さ、模式値${requestedPercent}パーセント`
+                  : `Model response strength, schematic value ${requestedPercent} percent`
+              )
+        );
+        stageDescription.textContent = language === "ja"
+          ? (
+              `${stateLabel}、重り高さ${loadLabel}。` +
+              `左は脊柱リンクの形を保つ股関節主導、右は${patternDetail}です。` +
+              `${constraintLabel}で、比較側の重り水平変位は${displacementLabel}です。` +
+              (timingLabel ? `${timingLabel}を仮定しています。` : "") +
+              (constraintLimited ? `${geometryNote}です。` : "")
+            )
+          : (
+              `${stateLabel}, load height ${loadLabel}. ` +
+              `The left figure uses a hip-dominant strategy while maintaining spinal-link shape. ` +
+              `The right figure shows ${patternDetail}. ${constraintLabel}; ` +
+              `comparison-side horizontal load displacement is ${displacementLabel}. ` +
+              (timingLabel ? `${timingLabel} is assumed. ` : "") +
+              (constraintLimited ? `${geometryNote}.` : "")
+            );
+
+        if (overlay) {
+          stageLabels.innerHTML = (
+            `<text class="panel-label" x="${compact ? 240 : 480}" y="29" text-anchor="middle">${translate("overlayComparison")}</text>` +
+            `<text class="panel-detail" x="${compact ? 240 : 480}" y="50" text-anchor="middle">${constraintLabel}${constraintLimited ? ` · ${responseLabel}` : ""}</text>`
+          );
+        } else if (compact) {
+          stageLabels.innerHTML = (
+            `<text class="panel-label" x="240" y="29" text-anchor="middle">${translate("hipDominant")}</text>` +
+            `<text class="panel-detail" x="240" y="50" text-anchor="middle">${translate("maintainSpineShape")}</text>` +
+            `<line class="panel-divider" x1="20" y1="500" x2="460" y2="500"/>` +
+            `<text class="panel-label" x="240" y="529" text-anchor="middle">${translate("comparisonCoordination")}</text>` +
+            `<text class="panel-detail" x="240" y="550" text-anchor="middle">${patternLabel} · ${responseLabel}</text>`
+          );
+        } else {
+          stageLabels.innerHTML = (
+            `<text class="panel-label" x="240" y="29" text-anchor="middle">${translate("hipDominant")}</text>` +
+            `<text class="panel-detail" x="240" y="50" text-anchor="middle">${translate("maintainSpineShape")}</text>` +
+            `<text class="panel-label" x="720" y="29" text-anchor="middle">${translate("comparisonCoordination")}</text>` +
+            `<text class="panel-detail" x="720" y="50" text-anchor="middle">${patternLabel} · ${responseLabel}</text>` +
+            `<line class="panel-divider" x1="480" y1="65" x2="480" y2="493"/>`
+          );
+        }
+
+        const brandX = compact ? 470 : 950;
+        const brandY = compact && !overlay ? 989 : 510;
+        stageBrand.innerHTML = (
+          `<text class="svg-brand" x="${brandX}" y="${brandY}" text-anchor="end">` +
+          `HamsterSpin Motion Lab · Deadlift · @hamsterspin.lab</text>`
+        );
+      }
+
+      function setProgressValue(value) {
+        progressValue = value;
+        progressInput.value = String(Math.round(value));
+      }
+
+      function render() {
+        const progress = progressValue / 100;
+        const strategy = Number(strategyInput.value) / 100;
+        const pattern = patternInput.value;
+        const overlay = overlayInput.checked;
+        const compact = compactMedia.matches;
+        const good = buildReferencePose(progress);
+        const compare = buildResponsePose(
+          progress,
+          strategy,
+          pattern,
+          good,
+          playbackDirection
+        );
+        const loadDisplacement = compare.hand.x - good.hand.x;
+
+        updateLabels(
+          progress,
+          playbackDirection,
+          strategy,
+          compare.effectiveResponse,
+          compare.constraintLimited,
+          overlay,
+          compact,
+          pattern,
+          good.loadHeight,
+          loadDisplacement
+        );
+
+        if (overlay) {
+          const originX = compact ? 240 : 480;
+          motionStage.setAttribute("viewBox", compact ? "0 0 480 520" : "0 0 960 520");
+          goodFigure.removeAttribute("transform");
+          compareFigure.removeAttribute("transform");
+          goodFigure.innerHTML = figureMarkup(good, originX, "good", {
+            compactLoad: true
+          });
+          compareFigure.innerHTML = figureMarkup(compare, originX, "compare", {
+            showEnvironment: false,
+            showLoad:
+              pattern === "flexion" && Math.abs(loadDisplacement) >= 0.005,
+            compareLoad: true,
+            compactLoad: true
+          });
+        } else if (compact) {
+          motionStage.setAttribute("viewBox", "0 0 480 1000");
+          goodFigure.removeAttribute("transform");
+          compareFigure.setAttribute("transform", "translate(0 500)");
+          goodFigure.innerHTML = figureMarkup(good, 240, "good");
+          compareFigure.innerHTML = figureMarkup(compare, 240, "compare", {
+            referencePose: good
+          });
+        } else {
+          motionStage.setAttribute("viewBox", "0 0 960 520");
+          goodFigure.removeAttribute("transform");
+          compareFigure.removeAttribute("transform");
+          goodFigure.innerHTML = figureMarkup(good, 240, "good");
+          compareFigure.innerHTML = figureMarkup(compare, 720, "compare", {
+            referencePose: good
+          });
+        }
+
+        updateTable(good, compare);
+      }
+
+      function setPlaying(nextPlaying) {
+        playing = nextPlaying;
+        playButton.textContent = translate(getPlayButtonKey());
+        playButton.setAttribute("aria-pressed", String(playing));
+        playStatus.textContent = translate(
+          playing
+            ? (
+                playbackDirection === "ascent"
+                  ? "playedAscent"
+                  : "playedDescent"
+              )
+            : "stopped"
+        );
+        lastFrameTime = null;
+
+        if (playing) {
+          animationFrame = requestAnimationFrame(animate);
+        } else if (animationFrame !== null) {
+          cancelAnimationFrame(animationFrame);
+          animationFrame = null;
+        }
+      }
+
+      function animate(timestamp) {
+        if (!playing) {
+          return;
+        }
+        if (lastFrameTime === null) {
+          lastFrameTime = timestamp;
+        }
+        const elapsed = timestamp - lastFrameTime;
+        lastFrameTime = timestamp;
+        const increment = elapsed / 38;
+        let value = progressValue +
+          (playbackDirection === "ascent" ? increment : -increment);
+
+        if (playbackDirection === "ascent" && value >= 100) {
+          value = 100;
+          setProgressValue(value);
+          previousProgressValue = value;
+          playbackDirection = "descent";
+          render();
+          setPlaying(false);
+          playStatus.textContent = translate("reachedLockout");
+          return;
+        }
+
+        if (playbackDirection === "descent" && value <= 0) {
+          value = 0;
+          setProgressValue(value);
+          previousProgressValue = value;
+          playbackDirection = "ascent";
+          render();
+          setPlaying(false);
+          playStatus.textContent = translate("reachedBottom");
+          return;
+        }
+
+        setProgressValue(value);
+        previousProgressValue = value;
+        render();
+        animationFrame = requestAnimationFrame(animate);
+      }
+
+      playButton.addEventListener("click", () => {
+        if (playing) {
+          setPlaying(false);
+          return;
+        }
+
+        if (progressValue <= 0) {
+          playbackDirection = "ascent";
+        } else if (progressValue >= 100) {
+          playbackDirection = "descent";
+        }
+        setPlaying(true);
+      });
+
+      progressInput.addEventListener("input", () => {
+        const value = Number(progressInput.value);
+        progressValue = value;
+        if (value > previousProgressValue) {
+          playbackDirection = "ascent";
+        } else if (value < previousProgressValue) {
+          playbackDirection = "descent";
+        }
+        if (value <= 0) {
+          playbackDirection = "ascent";
+        } else if (value >= 100) {
+          playbackDirection = "descent";
+        }
+        previousProgressValue = value;
+        if (playing) {
+          setPlaying(false);
+        } else {
+          playButton.textContent = translate(getPlayButtonKey());
+        }
+        render();
+      });
+
+      strategyInput.addEventListener("input", render);
+      patternInput.addEventListener("change", () => {
+        if (playing) {
+          setPlaying(false);
+        }
+        setProgressValue(0);
+        previousProgressValue = 0;
+        playbackDirection = "ascent";
+        render();
+        playButton.textContent = translate(getPlayButtonKey());
+        const patternLabel = translate(RESPONSE_PROFILES[patternInput.value].labelKey);
+        playStatus.textContent = language === "ja"
+          ? `${patternLabel}を下降終点で表示しました。`
+          : `${patternLabel} shown at the bottom position.`;
+        syncUrlState();
+      });
+      overlayInput.addEventListener("change", render);
+      compactMedia.addEventListener("change", render);
+
+      heightInput.addEventListener("input", () => {
+        if (playing) {
+          setPlaying(false);
+        }
+        updateAnthropometry();
+        render();
+      });
+      heightInput.addEventListener("change", syncUrlState);
+      bodyRatioInput.addEventListener("input", () => {
+        if (playing) {
+          setPlaying(false);
+        }
+        updateAnthropometry();
+        render();
+      });
+      bodyRatioInput.addEventListener("change", syncUrlState);
+
+      languageButtons.forEach(button => {
+        button.addEventListener("click", () => {
+          language = button.dataset.language === "en" ? "en" : "ja";
+          applyTranslations();
+          updateAnthropometry();
+          render();
+          playButton.textContent = translate(getPlayButtonKey());
+          syncUrlState();
+        });
+      });
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        playStatus.textContent = translate("reducedMotion");
+      }
+
+      readUrlState();
+      applyTranslations();
+      updateAnthropometry();
+      render();
+    })();
+  </script>
+</body>
+</html>

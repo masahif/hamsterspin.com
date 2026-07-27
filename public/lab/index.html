@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta
+    name="description"
+    content="HamsterSpin Motion Lab visualizes training movements and coordination patterns with bilingual interactive models."
+  >
+  <link rel="icon" href="../image/ham.svg" type="image/svg+xml">
+  <title>HamsterSpin Motion Lab</title>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="HamsterSpin Motion Lab">
+  <meta property="og:url" content="https://hamsterspin.com/lab/">
+  <meta property="og:title" content="HamsterSpin Motion Lab">
+  <meta
+    property="og:description"
+    content="HamsterSpin Motion Lab visualizes training movements and coordination patterns with bilingual interactive models."
+  >
+  <meta property="og:image" content="https://hamsterspin.com/image/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #f2f0e9;
+      --surface: #fffdf8;
+      --foreground: #1d2524;
+      --muted: #e8e4da;
+      --muted-foreground: #626a67;
+      --border: #cbc6ba;
+      --primary: #1e6965;
+      --primary-foreground: #fff;
+      --accent: #dcece9;
+      --planned: #eeeae1;
+      --focus: #1167a8;
+      --shadow: 0 18px 50px rgb(31 41 39 / 10%);
+      font-family:
+        Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --background: #141918;
+        --surface: #1c2321;
+        --foreground: #edf2ef;
+        --muted: #2a3330;
+        --muted-foreground: #b4bfbb;
+        --border: #46514e;
+        --primary: #9fd5cf;
+        --primary-foreground: #10211f;
+        --accent: #243a37;
+        --planned: #252c2a;
+        --focus: #8bcaff;
+        --shadow: 0 18px 50px rgb(0 0 0 / 28%);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 12% 7%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 30rem),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    :where(a, button):focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .page {
+      width: min(70rem, calc(100% - 2rem));
+      margin-inline: auto;
+      padding-block: clamp(1.25rem, 4vw, 3.5rem);
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem 1rem;
+      margin-block-end: clamp(2.5rem, 8vw, 6rem);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .brand strong {
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--muted-foreground);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .language-switch {
+      display: inline-flex;
+      padding: 0.2rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--muted);
+    }
+
+    .language-switch button {
+      min-height: 2.15rem;
+      padding-inline: 0.8rem;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted-foreground);
+      cursor: pointer;
+    }
+
+    .language-switch button[aria-pressed="true"] {
+      background: var(--surface);
+      color: var(--foreground);
+      box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+      font-weight: 750;
+    }
+
+    .hero {
+      max-width: 58rem;
+      margin-block-end: clamp(2.5rem, 7vw, 5rem);
+    }
+
+    .eyebrow {
+      margin: 0 0 0.45rem;
+      color: var(--primary);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 16ch;
+      margin: 0;
+      font-size: clamp(2.4rem, 7vw, 5.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .lead {
+      max-width: 66ch;
+      margin: 1.2rem 0 0;
+      color: var(--muted-foreground);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+    }
+
+    h2 {
+      margin: 0 0 1rem;
+      font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      min-height: 13rem;
+      padding: 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .card.available {
+      display: grid;
+      color: var(--foreground);
+      text-decoration: none;
+      transition: transform 160ms ease, border-color 160ms ease;
+    }
+
+    .card.available:hover {
+      border-color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    .card.planned {
+      background: var(--planned);
+      box-shadow: none;
+    }
+
+    .status {
+      width: fit-content;
+      margin: 0 0 1.8rem;
+      padding: 0.28rem 0.62rem;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--primary);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .planned .status {
+      background: var(--muted);
+      color: var(--muted-foreground);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.45rem;
+      line-height: 1.2;
+    }
+
+    .card p {
+      margin: 0.65rem 0 0;
+      color: var(--muted-foreground);
+      font-size: 0.9rem;
+    }
+
+    .open-label {
+      align-self: end;
+      margin-block-start: 1.5rem;
+      color: var(--primary);
+      font-weight: 750;
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-block-start: clamp(3rem, 8vw, 6rem);
+      padding-block-start: 2rem;
+      border-block-start: 1px solid var(--border);
+    }
+
+    .principles article {
+      max-width: 32rem;
+    }
+
+    .principles h2 {
+      font-size: 1rem;
+      margin-block-end: 0.35rem;
+    }
+
+    .principles p {
+      margin: 0;
+      color: var(--muted-foreground);
+      font-size: 0.88rem;
+    }
+
+    footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem 1rem;
+      margin-block-start: 4rem;
+      color: var(--muted-foreground);
+      font-size: 0.8rem;
+    }
+
+    footer a {
+      color: var(--foreground);
+      text-underline-offset: 0.18em;
+    }
+
+    footer .footer-license {
+      flex-basis: 100%;
+      border-block-start: 1px solid var(--border);
+      padding-block-start: 0.5rem;
+    }
+
+    @media (max-width: 44rem) {
+      .cards,
+      .principles {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card.available {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="https://hamsterspin.com/">
+        <strong>HamsterSpin</strong>
+        <span>Motion Lab</span>
+      </a>
+      <div class="language-switch" aria-label="Language">
+        <button type="button" data-language="ja" aria-pressed="false">日本語</button>
+        <button type="button" data-language="en" aria-pressed="true">English</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Movement, made visible</p>
+        <h1 id="page-title" data-ja="動作を、見えるかたちに。" data-en="Make movement visible.">動作を、見えるかたちに。</h1>
+        <p
+          class="lead"
+          data-ja="トレーニング動作を矢状面のインタラクティブモデルで比較します。目標動作だけでなく、重りと身体の拘束条件から生じる協調・代償パターンも扱います。"
+          data-en="Interactive sagittal-plane models for training movements. Explore both target strategies and coordination or compensation patterns that emerge under shared body and load constraints."
+        >
+          トレーニング動作を矢状面のインタラクティブモデルで比較します。目標動作だけでなく、重りと身体の拘束条件から生じる協調・代償パターンも扱います。
+        </p>
+      </section>
+
+      <section aria-labelledby="models-heading">
+        <h2 id="models-heading" data-ja="動作モデル" data-en="Movement models">動作モデル</h2>
+        <div class="cards">
+          <a class="card available" id="deadlift-link" href="exercise/deadlift.html?lang=en">
+            <span class="status" data-ja="公開中" data-en="Available">公開中</span>
+            <h3 data-ja="デッドリフト" data-en="Deadlift">デッドリフト</h3>
+            <p
+              data-ja="股関節主導と、屈曲優位・伸展優位の多分節協調を比較します。身長と体幹／大腿比を調整できます。"
+              data-en="Compare a hip-dominant strategy with flexion- and extension-dominant multisegment patterns. Adjust height and torso-to-femur ratio."
+            >
+              股関節主導と、屈曲優位・伸展優位の多分節協調を比較します。身長と体幹／大腿比を調整できます。
+            </p>
+            <span class="open-label" data-ja="モデルを開く →" data-en="Open model →">モデルを開く →</span>
+          </a>
+
+          <article class="card planned">
+            <span class="status" data-ja="予定" data-en="Planned">予定</span>
+            <h3 data-ja="ニーリング" data-en="Kneeling">ニーリング</h3>
+            <p data-ja="足関節・足趾・骨盤を含むニーリング姿勢を比較します。" data-en="Compare kneeling postures including the ankle, toes, and pelvis.">
+              足関節・足趾・骨盤を含むニーリング姿勢を比較します。
+            </p>
+          </article>
+
+          <article class="card planned">
+            <span class="status" data-ja="予定" data-en="Planned">予定</span>
+            <h3 data-ja="スクワット" data-en="Squat">スクワット</h3>
+            <p data-ja="足関節・膝・股関節・体幹の協調と、体節比率の影響を扱います。" data-en="Explore ankle, knee, hip, and trunk coordination and the effect of segment proportions.">
+              足関節・膝・股関節・体幹の協調と、体節比率の影響を扱います。
+            </p>
+          </article>
+
+          <article class="card planned">
+            <span class="status" data-ja="予定" data-en="Planned">予定</span>
+            <h3 data-ja="ヒールレイズ" data-en="Heel raise">ヒールレイズ</h3>
+            <p data-ja="足関節・距骨下関節・足趾を含むつま先立ちモデルを扱います。" data-en="Model heel raise with ankle, subtalar, and toe contributions.">
+              足関節・距骨下関節・足趾を含むつま先立ちモデルを扱います。
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="principles" aria-label="Model principles">
+        <article>
+          <h2 data-ja="模式モデル" data-en="Schematic">模式モデル</h2>
+          <p data-ja="実測・診断・傷害予測ではなく、動作の関係を考えるための教育用モデルです。" data-en="An educational model for exploring movement relationships, not measurement, diagnosis, or injury prediction.">
+            実測・診断・傷害予測ではなく、動作の関係を考えるための教育用モデルです。
+          </p>
+        </article>
+        <article>
+          <h2 data-ja="拘束条件を共有" data-en="Shared constraints">拘束条件を共有</h2>
+          <p data-ja="比較する姿勢には、足位置・重り高さなど共通の課題条件を設定します。" data-en="Compared postures share task conditions such as foot position and load height.">
+            比較する姿勢には、足位置・重り高さなど共通の課題条件を設定します。
+          </p>
+        </article>
+        <article>
+          <h2 data-ja="出典を分離" data-en="Evidence boundaries">出典を分離</h2>
+          <p data-ja="文献上の観察、標準解剖、モデル上の仮説を区別して表示します。" data-en="Published observations, standard anatomy, and model hypotheses are kept distinct.">
+            文献上の観察、標準解剖、モデル上の仮説を区別して表示します。
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <span>
+        <strong><a href="https://hamsterspin.com/" target="_blank" rel="noopener">HamsterSpin Motion Lab</a></strong>
+        · <a href="https://instagram.com/hamsterspin.lab" target="_blank" rel="noopener">@hamsterspin.lab</a>
+      </span>
+      <span class="footer-license">
+        <span
+          data-ja="© HamsterSpin — "
+          data-en="© HamsterSpin — Licensed under "
+        >© HamsterSpin — </span><a
+          href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank"
+          rel="license noopener"
+          data-ja="CC BY 4.0（表示）"
+          data-en="CC BY 4.0"
+        >CC BY 4.0（表示）</a><span
+          data-ja="で提供しています。自由に利用・共有・改変できます。hamsterspin.com のクレジット表記をお願いします"
+          data-en=". Free to use, share, and adapt with attribution to hamsterspin.com"
+        >で提供しています。自由に利用・共有・改変できます。hamsterspin.com のクレジット表記をお願いします</span>
+      </span>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+      const parameters = new URLSearchParams(window.location.search);
+      let language = parameters.get("lang") === "ja" ? "ja" : "en";
+      const buttons = document.querySelectorAll("[data-language]");
+      const deadliftLink = document.getElementById("deadlift-link");
+
+      function renderLanguage() {
+        document.documentElement.lang = language;
+        document.querySelectorAll("[data-ja][data-en]").forEach(element => {
+          element.textContent = element.dataset[language];
+        });
+        buttons.forEach(button => {
+          button.setAttribute("aria-pressed", String(button.dataset.language === language));
+        });
+        deadliftLink.href = `exercise/deadlift.html?lang=${language}`;
+        const url = new URL(window.location.href);
+        url.searchParams.set("lang", language);
+        window.history.replaceState(null, "", url);
+      }
+
+      buttons.forEach(button => {
+        button.addEventListener("click", () => {
+          language = button.dataset.language === "en" ? "en" : "ja";
+          renderLanguage();
+        });
+      });
+
+      renderLanguage();
+    })();
+  </script>
+</body>
+</html>
