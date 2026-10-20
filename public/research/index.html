@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta
+    name="description"
+    content="HamsterSpin Research conducts independent research on cycling movement, pedal force, and performance, led by Masahiro Fukuda, PhD (Medicine)."
+  >
+  <link rel="icon" href="../image/ham.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://hamsterspin.com/research/">
+  <title>HamsterSpin Research</title>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="HamsterSpin Research">
+  <meta property="og:url" content="https://hamsterspin.com/research/">
+  <meta property="og:title" content="HamsterSpin Research — Independent Research in Cycling Science">
+  <meta
+    property="og:description"
+    content="Quantitative analysis of cycling movement, pedal force, and performance."
+  >
+  <meta property="og:image" content="https://hamsterspin.com/image/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #f2f0e9;
+      --surface: #fffdf8;
+      --foreground: #1d2524;
+      --muted: #e8e4da;
+      --muted-foreground: #626a67;
+      --border: #cbc6ba;
+      --primary: #1e6965;
+      --accent: #dcece9;
+      --focus: #1167a8;
+      --shadow: 0 18px 50px rgb(31 41 39 / 10%);
+      font-family:
+        Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --background: #141918;
+        --surface: #1c2321;
+        --foreground: #edf2ef;
+        --muted: #2a3330;
+        --muted-foreground: #b4bfbb;
+        --border: #46514e;
+        --primary: #9fd5cf;
+        --accent: #243a37;
+        --focus: #8bcaff;
+        --shadow: 0 18px 50px rgb(0 0 0 / 28%);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 12% 7%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 30rem),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-underline-offset: 0.18em;
+    }
+
+    a:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .page {
+      width: min(70rem, calc(100% - 2rem));
+      margin-inline: auto;
+      padding-block: clamp(1.25rem, 4vw, 3.5rem);
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem 1rem;
+      margin-block-end: clamp(2.5rem, 8vw, 6rem);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      color: var(--foreground);
+      text-decoration: none;
+    }
+
+    .brand strong {
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand span,
+    .eyebrow {
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .brand span {
+      color: var(--muted-foreground);
+    }
+
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.25rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .site-nav a {
+      color: var(--foreground);
+      font-weight: 650;
+    }
+
+    .hero {
+      max-width: 58rem;
+      margin-block-end: clamp(2.5rem, 7vw, 5rem);
+      padding: 0;
+      border: 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.45rem;
+      color: var(--primary);
+    }
+
+    h1 {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .lead {
+      max-width: 66ch;
+      margin: 1.2rem 0 0;
+      color: var(--muted-foreground);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+    }
+
+    section {
+      padding-block: clamp(2rem, 5vw, 3rem);
+      border-block-start: 1px solid var(--border);
+    }
+
+    h2 {
+      margin: 0 0 1rem;
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      line-height: 1.2;
+    }
+
+    h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1.05rem;
+      line-height: 1.35;
+    }
+
+    section p {
+      max-width: 70ch;
+    }
+
+    .muted {
+      color: var(--muted-foreground);
+    }
+
+    .profile-name {
+      margin-block-end: 0.25rem;
+      font-size: 1.3rem;
+    }
+
+    .profile-meta {
+      margin-block-start: 0;
+      color: var(--muted-foreground);
+    }
+
+    .areas {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .area {
+      padding: 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .area p {
+      margin: 0;
+      color: var(--muted-foreground);
+      font-size: 0.92rem;
+    }
+
+    .publications {
+      display: grid;
+      gap: 1.25rem;
+      margin: 0 0 2rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .publications li {
+      max-width: 70ch;
+    }
+
+    .publications p {
+      margin: 0.15rem 0 0;
+      font-size: 0.92rem;
+    }
+
+    .year {
+      display: inline-block;
+      margin-inline-end: 0.4rem;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .note {
+      color: var(--muted-foreground);
+      font-style: italic;
+    }
+
+    footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem 1rem;
+      padding-block-start: 1.5rem;
+      border-block-start: 1px solid var(--border);
+      color: var(--muted-foreground);
+      font-size: 0.8rem;
+    }
+
+    footer a {
+      color: var(--foreground);
+    }
+
+    @media (max-width: 44rem) {
+      .areas {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="/research/">
+        <strong>HamsterSpin</strong>
+        <span>Research</span>
+      </a>
+      <nav aria-label="Site">
+        <ul class="site-nav">
+          <li><a href="/lab/?lang=en">Motion Lab</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">HamsterSpin / Research</p>
+        <h1 id="page-title">Independent Research in Cycling Science</h1>
+        <p class="lead">
+          HamsterSpin conducts independent scientific research focused on the quantitative analysis of cycling movement, pedaling strategies, and human performance.
+        </p>
+        <p class="lead">
+          Our research combines real-world cycling measurements, statistical analysis, mathematical modeling, and computational methods to better understand how cyclists adapt their movements to changing workloads.
+        </p>
+      </section>
+
+      <section aria-labelledby="researcher-heading">
+        <p class="eyebrow">01 — Researcher</p>
+        <h2 id="researcher-heading">Researcher</h2>
+        <p class="profile-name"><strong>Masahiro Fukuda, PhD (Medicine)</strong></p>
+        <p class="profile-meta">
+          Principal Researcher, HamsterSpin<br>
+          PhD in Medicine, Kansai Medical University, Japan (2026)
+        </p>
+        <p>
+          Masahiro Fukuda conducts independent research on cycling pedaling techniques, pedal force measurement, and quantitative evaluation of human movement.
+        </p>
+        <p>
+          His doctoral research developed a principal component analysis (PCA) framework for characterizing individual pedaling strategies using pedal force vector data collected during outdoor cycling.
+        </p>
+        <p><a href="https://scholar.google.com/citations?user=wBUwiX8AAAAJ" rel="me noopener" target="_blank">Google Scholar Profile</a></p>
+      </section>
+
+      <section aria-labelledby="areas-heading">
+        <p class="eyebrow">02 — Research Areas</p>
+        <h2 id="areas-heading">Research Areas</h2>
+        <div class="areas">
+          <article class="area">
+            <h3>Pedaling Strategy Analysis</h3>
+            <p>Quantifying how cyclists adapt force application throughout the crank cycle in response to changing workloads.</p>
+          </article>
+          <article class="area">
+            <h3>Pedal Force Measurement</h3>
+            <p>Analyzing tangential and radial pedal forces to understand individual movement characteristics and coordination.</p>
+          </article>
+          <article class="area">
+            <h3>Statistical and Computational Modeling</h3>
+            <p>Developing reproducible analytical methods using principal component analysis, regression techniques, and computational models.</p>
+          </article>
+          <article class="area">
+            <h3>Measurement Systems</h3>
+            <p>Investigating sensor-based methods for accurately measuring pedal motion and cycling-related movement.</p>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="collaboration-heading">
+        <p class="eyebrow">03 — Research Collaboration</p>
+        <h2 id="collaboration-heading">Research Collaboration</h2>
+        <p>
+          Masahiro Fukuda continues to collaborate with <strong>Tomoki Kitawaki of Kansai Medical University</strong>, a co-author of multiple scientific publications on cycling pedaling analysis.
+        </p>
+        <p>
+          This ongoing collaboration builds upon their previous research and explores further opportunities to advance quantitative methods for evaluating cycling movement.
+        </p>
+        <p class="muted">
+          HamsterSpin operates independently, and this research collaboration does not represent a formal institutional affiliation with Kansai Medical University.
+        </p>
+      </section>
+
+      <section aria-labelledby="publications-heading">
+        <p class="eyebrow">04 — Publications</p>
+        <h2 id="publications-heading">Selected Publications</h2>
+
+        <h3>Research Papers</h3>
+        <ul class="publications">
+          <li>
+            <p><span class="year">2026</span><strong>Evaluating pedaling strategy using a principal component analysis-based analysis of crank force vectors collected during outdoor cycling</strong></p>
+            <p>M. Fukuda, R. Koyama, T. Inomata, T. Kitawaki</p>
+            <p><cite>Acta of Bioengineering and Biomechanics</cite>, 28(1), 48–61.</p>
+            <p>
+              <a href="https://doi.org/10.37190/abb/220441">DOI</a> ·
+              <a href="https://actabio.pwr.edu.pl/d/TGBUKOTtQKxVvA0RqREFBPF0WUXJ9XFtOSylDC0QSFG9PFQk5Eht1FRMSWHoFPFgHFkhCcHtUWFtfOA/10.pdf">Open Access PDF</a>
+            </p>
+          </li>
+          <li>
+            <p><span class="year">2025</span><strong>Bicycle Pedal Angle Measurements Using Model With Wireless Motion Sensors</strong></p>
+            <p>M. Fukuda, T. Kitawaki</p>
+            <p><cite>IFAC-PapersOnLine</cite>, 59(1), 205–210.</p>
+            <p><a href="https://doi.org/10.1016/j.ifacol.2025.03.036">DOI</a></p>
+          </li>
+          <li>
+            <p><span class="year">2024 volume</span><strong>New index for evaluating pedaling techniques using the pedaling efficiency index with gradually increasing load</strong></p>
+            <p>T. Kitawaki, M. Fukuda</p>
+            <p><cite>Acta of Bioengineering and Biomechanics</cite>, 26(4), 145–153. Published in March 2025.</p>
+            <p><a href="https://doi.org/10.37190/abb-02546-2024-02">DOI</a></p>
+          </li>
+        </ul>
+
+        <h3>Published Conference Abstracts</h3>
+        <ul class="publications">
+          <li>
+            <p><span class="year">2020</span><strong>Analysis of pedaling motion focusing on the crank angle corresponding to the maximum pedal angle</strong></p>
+            <p>M. Fukuda, T. Kitawaki</p>
+            <p><cite>Journal of Science and Cycling</cite>, 9(2), 1–3.</p>
+            <p><a href="https://jsc-journal.com/index.php/JSC/article/download/536/596">Published Abstract</a></p>
+            <p class="note">The abstract was published, but the planned in-person presentation was not delivered due to COVID-19-related travel disruption.</p>
+          </li>
+          <li>
+            <p><span class="year">2019</span><strong>Easy to use accurate measuring system for cycling pedaling motion using a small LED and a smartphone</strong></p>
+            <p>M. Fukuda, T. Kitawaki</p>
+            <p><cite>Journal of Science and Cycling</cite>, 8(2), 59–60.</p>
+            <p><a href="https://jsc-journal.com/index.php/JSC/article/download/497/559">Published Abstract</a></p>
+          </li>
+          <li>
+            <p><span class="year">2018</span><strong>Connection between Heel Motion and Torque in crank revolution</strong></p>
+            <p>M. Fukuda, T. Kitawaki</p>
+            <p><cite>Journal of Science and Cycling</cite>, 7(2), 14–15.</p>
+            <p><a href="https://jsc-journal.com/index.php/JSC/article/download/391/495">Published Abstract</a></p>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="directions-heading">
+        <p class="eyebrow">05 — Current Research &amp; Future Directions</p>
+        <h2 id="directions-heading">Current Research &amp; Future Directions</h2>
+        <p>
+          Our ongoing research seeks to improve the reproducibility, interpretation, and applicability of quantitative pedaling strategy indicators.
+        </p>
+        <p>
+          Potential next steps include evaluating the stability of PCA-based characteristics across different riding conditions, comparing measurement approaches, and investigating computational methods for analyzing newly collected cycling data.
+        </p>
+        <p>
+          We aim to continue developing scientifically reproducible analytical workflows and pursue additional research publications.
+        </p>
+      </section>
+
+      <section id="contact" aria-labelledby="contact-heading">
+        <p class="eyebrow">06 — Profiles &amp; Contact</p>
+        <h2 id="contact-heading">Profiles &amp; Contact</h2>
+        <h3>Research Tools &amp; Resources</h3>
+        <p>
+          <a href="/lab/?lang=en">HamsterSpin Motion Lab</a> — Interactive educational models for exploring human movement.
+        </p>
+        <h3>Contact</h3>
+        <p>
+          <strong>Masahiro Fukuda</strong><br>
+          HamsterSpin — Independent Cycling Research<br>
+          Email: <a href="mailto:info@hamsterspin.com">info@hamsterspin.com</a><br>
+          <a href="https://scholar.google.com/citations?user=wBUwiX8AAAAJ" rel="me noopener" target="_blank">Google Scholar</a>
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>© HamsterSpin</span>
+      <span><a href="/lab/?lang=en">Motion Lab</a> · <a href="https://instagram.com/hamsterspin.lab" target="_blank" rel="noopener">@hamsterspin.lab</a></span>
+    </footer>
+  </div>
+</body>
+</html>
